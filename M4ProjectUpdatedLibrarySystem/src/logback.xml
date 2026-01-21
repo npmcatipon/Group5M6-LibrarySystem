@@ -2,11 +2,11 @@
 
 <configuration>
 
-	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%level] %logger{36} - %msg%n</pattern>
-		</encoder>
-	</appender>
+<!--	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--		<encoder>-->
+<!--			<pattern>%d{HH:mm:ss.SSS} [%level] %logger{36} - %msg%n</pattern>-->
+<!--		</encoder>-->
+<!--	</appender>-->
 
 
 	
@@ -29,7 +29,7 @@
 	</appender>
 
 	<root level="INFO">
-		<appender-ref ref="CONSOLE" />
+<!--		<appender-ref ref="CONSOLE" />-->
 		<appender-ref ref="DAILY_FILE" />
 	</root>
 

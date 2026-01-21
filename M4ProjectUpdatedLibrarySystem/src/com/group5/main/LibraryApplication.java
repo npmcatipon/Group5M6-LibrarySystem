@@ -122,7 +122,7 @@ public class LibraryApplication {
 	            case '3':
 	            	//[3] Display All Borrowed Books 
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION3);
-	            	libraryService.displayAllBorrowedBooks();
+	            	libraryService.displayAllBorrowedBooks(user);
 	            	//exit to menu
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -176,7 +176,7 @@ public class LibraryApplication {
 		                System.out.println(Constants.strDISPLAY_SELECTED_OPTION6);
 		                Book book = inputNewBook(input);
 		                if (book != null) {
-			                libraryService.addBook(book);
+			                libraryService.addBook(book, user);
 		                }
 
 	            	}catch(InvalidBookException e) {
@@ -387,6 +387,8 @@ public class LibraryApplication {
 		String tempInput;
 		String prompt = "";
 		
+		logger.info("User {} selected option 6 Add book", user.getName());
+		
 		//input book ID
 		prompt = Constants.strPROMPT_ENTER_BOOKID ;
 		do {
@@ -398,19 +400,20 @@ public class LibraryApplication {
 				} else if (tempInput.length() > Constants.maxLenBookId) {
 	        		isInputValid = false;
 	        		System.out.print (Constants.strERROR_INVALID_INPUT);
-	        		logger.warn("Entered book ID: {}, {}, Book ID length cannot be more than 7",tempInput, Constants.strERROR_INVALID_INPUT);  // Added logger warn 01.19.2026
+	        		logger.warn("User {} entered book ID: {}, Invalid input, Book ID length cannot be more than 7", user.getName(), tempInput);  // Added logger warn 01.19.2026
 	        		
 	        		//throw new InvalidBookException("Book ID length cannot be more than 7"); // commented, will exit the loop 01.19.2026
 	        	} else {
 	        		isInputValid = libraryService.findBook(tempInput);
 	            	if (isInputValid) {
 	    				System.out.print (Constants.strERROR_BOOK_EXIST);
-		        		logger.warn("Entered book ID: {}, {}",tempInput,  Constants.strERROR_BOOK_EXIST); // added logger warn 01.19.2026
+		        		logger.warn("User {} entered book ID: {}, Invalid! Book ID already exists.",user.getName(), tempInput); // added logger warn 01.19.2026
 	    				isInputValid = false;
 		        		//throw new InvalidBookException("Book ID "+ tempInput+" already exists"); // commented, will exit the loop 01.19.2026
 	    				
 	    			} else {
 	    				bookId = tempInput;
+	    				logger.info("User {} inputted {} for book ID",user.getName(), tempInput);
 	    				isInputValid = true;
 		        		break;
 	    			}
@@ -436,13 +439,17 @@ public class LibraryApplication {
 		        		break;
 					} else {
 						bookTitle = tempInput;
+	    				logger.info("User {} inputted {} for book title",user.getName(), tempInput);
 						isInputValid = true;
 		        		break;
 					}
 				}
 				
 			} while (!isInputValid);
+		}else {
+			throw new InvalidBookException("Adding new book failed, user inputted "+ tempInput);
 		}
+		
 
         
 		if (!tempInput.equalsIgnoreCase("X")) {
@@ -459,11 +466,14 @@ public class LibraryApplication {
 		        		break;
 					} else {
 						bookAuthor = tempInput;
+	    				logger.info("User {} inputted {} for book author",user.getName(), tempInput);
 						isInputValid = true;
 		        		break;
 					}
 	        	}
 	        } while (!isInputValid);
+		}else {
+			throw new InvalidBookException("Adding new book failed, user inputted "+ tempInput);
 		}
 		
 		try {

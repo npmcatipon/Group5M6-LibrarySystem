@@ -13,7 +13,7 @@ public interface LibraryService {
 	
 	public int displayAvailableBooks();
 	
-	public int displayAllBorrowedBooks();
+	public int displayAllBorrowedBooks(User user);
 	
 	public int displayAllLoans();
 	
@@ -21,7 +21,7 @@ public interface LibraryService {
 	
 	public Library returnBook(String loanChoice);
 	
-	public Library addBook(Book book);
+	public Library addBook(Book book, User user);
 
 	public Library deleteBook(String bookId);
 
