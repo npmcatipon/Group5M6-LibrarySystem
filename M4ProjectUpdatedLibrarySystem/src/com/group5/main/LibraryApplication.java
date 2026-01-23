@@ -233,6 +233,7 @@ public class LibraryApplication {
 	            case '0':
 	            	//[0] Exit
 	                System.out.println(Constants.strDISPLAY_SELECTED_OPTION0);
+	                logger.info("User {} has logged out.", user.getName());
 	                break;
 
 	            default:
@@ -617,6 +618,7 @@ public class LibraryApplication {
     		if (tempInput != null) {
     			isInputValid = true;
     			user.setId(tempInput);
+    			logger.info("User {} has logged in.", user.getName());
     		}
     	} while (!isInputValid);
     	
@@ -670,7 +672,7 @@ public class LibraryApplication {
     			System.out.print (Constants.strERROR_INVALID_INPUT);
     			
     			// Added logger warn for null or empty input
-    			logger.warn("{} Input cannot be null or empty.", Constants.strERROR_INVALID_INPUT);
+    			logger.warn("Input cannot be null or empty.");
         	} else {
     			//valid input
     			ret = tempInput;

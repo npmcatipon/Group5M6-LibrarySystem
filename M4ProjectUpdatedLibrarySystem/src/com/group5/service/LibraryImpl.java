@@ -14,7 +14,8 @@ public class LibraryImpl implements LibraryService {
 	
 	private static final Logger logger =  LoggerFactory.getLogger(LibraryImpl.class);
 
-	private static final int initialbookcnt = 5;
+	//TODO change back to 5
+	private static final int initialbookcnt = 1;
 
 	private static List<Book> bookList;
 	private static List<Loan> loanList;
@@ -90,9 +91,11 @@ public class LibraryImpl implements LibraryService {
 
 		//print book list
 		int rowCount = displayTableDetails(DISPLAY_AVAILABLE_BOOKS);
+
 		if (rowCount <= 0) {
-			System.out.println(Constants.strNORECORDFOUND );
-		}
+			System.out.println(Constants.strERROR_NO_BOOKS_AVAILABLE);
+			logger.warn(Constants.strERROR_NO_BOOKS_AVAILABLE);
+		}	
 
 		//print table footer
 		displayTableLine(DISPLAY_AVAILABLE_BOOKS);

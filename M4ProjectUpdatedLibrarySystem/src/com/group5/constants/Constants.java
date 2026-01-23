@@ -110,5 +110,7 @@ public abstract class Constants {
 
 	public static final String strERROR_INVALID_INPUT   = " Invalid input! \n";
 	
+	public static final String strERROR_NO_BOOKS_AVAILABLE = "   No Books Available.\n";
+	
 	
 }
