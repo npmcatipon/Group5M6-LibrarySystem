@@ -14,8 +14,7 @@ public class LibraryImpl implements LibraryService {
 	
 	private static final Logger logger =  LoggerFactory.getLogger(LibraryImpl.class);
 
-	//TODO change back to 5
-	private static final int initialbookcnt = 1;
+	private static final int initialbookcnt = 5;
 
 	private static List<Book> bookList;
 	private static List<Loan> loanList;
