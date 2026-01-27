@@ -233,6 +233,7 @@ public class LibraryImpl implements LibraryService {
 
 				loanList.remove(i);
 				System.out.println(" You have successfully returned the book entitled " + book.getTitle());
+				logger.info("Successfully returned the book {}", book.getTitle());
 				break;
 			}
 		}
