@@ -102,7 +102,7 @@ public class LibraryApplication {
 	            case '1':
 	            	//[1] Display All Books
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION1);
-	            	logger.info("User {} selected option [1] Display Available Books", user.getName());
+	            	logger.info("User {} selected option [1] Display All Books", user.getName());
 	            	libraryService.displayAllBooks();
 	            	//exit to menu
 	            	displayLibraryMenu();
@@ -125,6 +125,7 @@ public class LibraryApplication {
 	            case '3':
 	            	//[3] Display All Borrowed Books 
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION3);
+	            	logger.info("User {} selected option [3] Display Borrowed Books", user.getName());
 	            	libraryService.displayAllBorrowedBooks(user);
 	            	//exit to menu
 	            	displayLibraryMenu();
@@ -143,7 +144,6 @@ public class LibraryApplication {
 	            	if (rowCount > 0) {
 		            	String bookIdChoice = askBookChoice(input);
 		            	if (bookIdChoice != "") {
-		            		logger.info("User {} searched for Book ID: {}", user.getName(), bookIdChoice);
 		            		//book found, ask user to input loan ID
 		            		String createdLoanId = askLoanId(input);
 		            		if (createdLoanId != "") {
@@ -291,13 +291,13 @@ public class LibraryApplication {
     			
         		if (tempInput.equalsIgnoreCase("X")) {
 	        		bookFound = true;
-	        		System.out.println("Going back to main menu.");
+	        		System.out.println(" Going back to main menu.");
 	        		logger.info("User {}, selected X in Book ID choice. Going back to main menu.", user.getName());
 	        		break;
 
         		} else {
 	            	bookFound = libraryService.findBook(tempInput);
-	            	logger.info("User {} search Book ID: {}", user.getName(), tempInput);
+	            	logger.info("User {} searched Book ID: {}", user.getName(), tempInput);
 
 	            	if (bookFound) {
 	        			//check if currently loaned
@@ -336,7 +336,8 @@ public class LibraryApplication {
     		if (tempInput != null) {
 	        	if (tempInput.equalsIgnoreCase("X")) {
 	        		loanSearch = true;
-	        		logger.warn("User {} inputted X in Loan ID. Going back to main menu.", user.getName());
+	        		System.out.println("Going back to main menu.");
+	        		logger.warn("User {} selected X in Loan ID. Going back to main menu.", user.getName());
 	        		break;
 	        	} else {
 	        		loanSearch = libraryService.findLoan(tempInput);

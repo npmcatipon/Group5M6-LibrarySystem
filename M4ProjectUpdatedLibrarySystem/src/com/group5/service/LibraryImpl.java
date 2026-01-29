@@ -66,7 +66,8 @@ public class LibraryImpl implements LibraryService {
 		//print book list
 		int rowCount = displayTableDetails(DISPLAY_ALL_BOOKS);
 		if (rowCount <= 0) {
-			System.out.println(Constants.strNORECORDFOUND );
+			System.out.println(Constants.strNORECORDFOUND);
+			logger.warn(Constants.strNORECORDFOUND);
 		}
 
 		//print table footer
@@ -108,7 +109,6 @@ public class LibraryImpl implements LibraryService {
 		// Added Logger Info - Jimboy Llagono
 		
     	System.out.println(Constants.strDISPLAY_BORROWED_BOOKS );
-    	logger.info("User {} selected option 3: display borrowed books", user.getName());
     	
 		//print table header
 		displayTableHeader(DISPLAY_BORROWED_BOOKS);
@@ -117,8 +117,7 @@ public class LibraryImpl implements LibraryService {
 		int rowCount = displayTableDetails(DISPLAY_BORROWED_BOOKS);
 		logger.info("Borrow books displayed. There are currently {} borrowed books", rowCount);
 		if (rowCount <= 0) {
-			System.out.println(Constants.strNORECORDFOUND );
-	    	logger.info("There are currently no borrowed books. No record found");
+			System.out.println(Constants.strNORECORDFOUND);
 		}
 		
 
