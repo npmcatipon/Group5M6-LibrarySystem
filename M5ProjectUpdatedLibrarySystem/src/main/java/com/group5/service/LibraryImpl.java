@@ -1,7 +1,12 @@
 package com.group5.service;
 
 import com.group5.model.*;
+import com.group5.util.DBUtil;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,18 +38,37 @@ public class LibraryImpl implements LibraryService {
 	public Library initializeList() {
 		bookList = new ArrayList<>();
 		Book book = null;
+		
+		final String INIT_BOOKS = 
+				"SELECT id,title,author,isBorrowed FROM book";
+		
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement ps = conn.prepareStatement(INIT_BOOKS);
+				ResultSet rs = ps.executeQuery()) {
+			
+			while (rs.next()) {
+				bookList.add(new Book(
+						rs.getString("id"),
+						rs.getString("title"),
+						rs.getString("author"),
+						rs.getBoolean("isBorrowed")));
+			}
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Failed to connect to database." + e);
+		}
 
 		//initialize 5 books
-		for (int i = 0; i < initialbookcnt; i++) {
-			switch (i) {
-				case 0: book = new Book("B1", "And Then There Were None",        "Agatha Christie",    false); break;
-				case 1: book = new Book("B2", "The Big Sleep",                   "Raymond Chandler",   false); break;
-				case 2: book = new Book("B3", "The Hound of the Baskervilles",   "Arthur Conan Doyle", false); break;
-				case 3: book = new Book("B4", "The Da Vinci Code",               "Dan Brown" ,         false); break;
-				case 4: book = new Book("B5", "The Girl with the Dragon Tattoo", "Stieg Larsson",      false); break;
-			}
-			bookList.add(book);
-		}
+//		for (int i = 0; i < initialbookcnt; i++) {
+//			switch (i) {
+//				case 0: book = new Book("B1", "And Then There Were None",        "Agatha Christie",    false); break;
+//				case 1: book = new Book("B2", "The Big Sleep",                   "Raymond Chandler",   false); break;
+//				case 2: book = new Book("B3", "The Hound of the Baskervilles",   "Arthur Conan Doyle", false); break;
+//				case 3: book = new Book("B4", "The Da Vinci Code",               "Dan Brown" ,         false); break;
+//				case 4: book = new Book("B5", "The Girl with the Dragon Tattoo", "Stieg Larsson",      false); break;
+//			}
+//			bookList.add(book);
+//		}
 
 		//empty loan list
 		loanList = new ArrayList<>();

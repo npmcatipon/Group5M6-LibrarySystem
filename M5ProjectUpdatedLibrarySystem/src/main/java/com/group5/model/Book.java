@@ -2,17 +2,14 @@ package com.group5.model;
 
 public class Book {
 	
-	// adding this "id" to give you an idea on what options you can do
 	private String id;
 	private String title;
 	private String author;
 	private boolean isBorrowed;
 
-	//no argument
 	public Book () {
 	}
 
-	//constructor
 	public Book (String id, String title, String author, boolean isBorrowed) {
 		this.id = id;
 		this.title = title;
@@ -45,9 +42,5 @@ public class Book {
 	public void setIsBorrowed(boolean isBorrowed) {
 		this.isBorrowed = isBorrowed;
 	}
-	
-
-// feel free to add fields that may help
-	
 	
 }
