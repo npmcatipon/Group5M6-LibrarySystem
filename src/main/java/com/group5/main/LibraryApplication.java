@@ -71,9 +71,6 @@ public class LibraryApplication {
 
 	}
 	
-	
-	
-	// Main Application Logic, call this in your Main.java
 	public void start() {
 		
 		BookService bookService = new BookServiceImpl(new BookDAOImpl());
@@ -87,8 +84,6 @@ public class LibraryApplication {
     	
     	welcomeMenuChoice();
     	
-    	
-    	//initially display the menu
     	displayLibraryMenu();
     	askMenuChoice();
 
@@ -275,6 +270,7 @@ public class LibraryApplication {
 				String userID = input.nextLine().trim();
 				
 				if (userID.trim().isEmpty() || userID == null) {
+					logger.warn("User ID is not valid");
 					throw new InvalidUserException("User ID is not valid.");
 				}
 				
@@ -282,6 +278,7 @@ public class LibraryApplication {
 				String username = input.nextLine().trim();
 				
 				if (username.trim().isEmpty() || username == null) {
+					logger.warn("Username is not valid");
 					throw new InvalidUserException("Username is not valid.");
 				}
 				
@@ -293,6 +290,7 @@ public class LibraryApplication {
 				
 				user = userLogin;
 				login = true;
+				logger.info("{} successfully login.", user.getName());
 				
 			} catch (InvalidUserException e) {
 				System.out.println("User ID or User name is not valid.");
