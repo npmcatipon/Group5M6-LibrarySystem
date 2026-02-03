@@ -6,5 +6,8 @@ import com.group5.model.Book;
 
 public interface BookService {
 	
-	List<Book> showAllBooks();
+	List<Book> getAllBooks();
+	List<Book> getAvailableBooks();
+	List<Book> getBorrowedBooks();
+	void addBook(String title, String author);
 }

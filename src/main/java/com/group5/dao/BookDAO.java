@@ -9,4 +9,5 @@ public interface BookDAO {
 		List<Book> getAllBooks();
 		List<Book> getAvailableBooks();
 		List<Book> getBorrowedBooks();
+		void addBook(String title, String author);
 }
