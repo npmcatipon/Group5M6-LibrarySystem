@@ -342,8 +342,10 @@ public class LibraryApplication {
 			
 			System.out.println(Constants.strPROMPT_ENTER_BOOKTITLE);
 	    	String title = input.nextLine();
-	    	logger.warn("Title cannot be null.");
+	    	
+	    	
 			if (title.trim().isEmpty() || title == null) {
+				logger.warn("Title cannot be null.");
 				throw new InvalidBookException("Title cannot be null or empty");
 			}
 			
@@ -391,7 +393,7 @@ public class LibraryApplication {
 				logger.info("{} successfully login.", user.getName());
 				
 			} catch (InvalidUserException e) {
-				System.out.println("User ID or User name is not valid.");
+				System.out.println(e.getMessage());
 			}
 
 		} while (!login);
