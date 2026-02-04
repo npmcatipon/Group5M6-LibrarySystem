@@ -196,8 +196,7 @@ public class LibraryApplication {
 		            		String title = validateTitle(input);
 		            		String author = validateAuthor(input);
 		            		
-		            		System.out.println("book add.");
-//		            		bookService.addBook(title, author);
+		            		bookService.addBook(title, author);
 		            	
 		            	} catch (InvalidBookException e) {
 		            		
@@ -213,34 +212,6 @@ public class LibraryApplication {
 	            		break;
 	            		
 	            	} while (true);
-	            	
-	            	
-	            	
-//	            	try {
-//	            		
-//	            		if (title.trim().isEmpty() || title == null) {
-//	            			logger.error("Book title is empty.");
-//	            			throw new InvalidBookException("Book title cannot be empty or null.");
-//	            		}
-//	            		
-//	            	} catch (InvalidBookException e) {
-//	            		System.out.println(e.getMessage());
-//	            	}
-//	            	
-//	            	System.out.println(Constants.strPROMPT_ENTER_BOOKAUTHOR);
-//	            	String author = input.nextLine();
-//	            	
-//	            	try {
-//	            		
-//	            		if (author.isEmpty() || author == null) {
-//	            			logger.error("Book Author is empty.");
-//	            			throw new InvalidBookException("Book author cannot be empty or null.");
-//	            		}
-//	            	} catch (InvalidBookException e) {
-//	            		System.out.println(e.getMessage());
-//	            	}
-	            	
-	            	
 	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
