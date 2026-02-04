@@ -12,4 +12,5 @@ public interface BookService {
 	void addBook(String title, String author);
 	Book findById(String bookId);
 	void updateBorrowBook(String bookID);
+	void deleteBook(String bookID);
 }

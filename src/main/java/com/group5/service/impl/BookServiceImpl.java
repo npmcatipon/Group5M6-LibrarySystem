@@ -43,4 +43,9 @@ public class BookServiceImpl implements BookService {
 		bookDAO.updateBorrowBook(bookID);
 	}
 
+	@Override
+	public void deleteBook(String bookID) {
+		bookDAO.deleteBook(bookID);
+	}
+
 }

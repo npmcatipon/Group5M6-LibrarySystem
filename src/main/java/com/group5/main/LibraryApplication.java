@@ -37,7 +37,6 @@
 
 package com.group5.main;
 
-import java.util.List;
 import java.util.Scanner;
 //Added import for Logger and LoggerFactory 01.19.2026
 import org.slf4j.Logger;
@@ -233,7 +232,23 @@ public class LibraryApplication {
 	            	//[7] Remove Book
 	                System.out.println(Constants.strDISPLAY_SELECTED_OPTION7);
 	                logger.info("User {} selected option [7] Remove Book", user.getName());
-
+	                
+	                libraryService.displayAvailableBooks();
+	                
+	                try {
+	                	Book book = validateBookId2(input);
+	                	
+	                	logger.info("Deleting Book ID: {} by User {}", book.getId(), user.getName());
+	                	
+	                	bookService.deleteBook(String.valueOf(book.getId()));
+	                	
+	                	System.out.printf("User {} has deleted Book ID: {}.", user.getName(), book.getId());
+	                	logger.info("Book {}, has been deleted by {}.", book.getTitle(), user.getName());
+	                	
+	                } catch (UserCancelException e) {
+	                	System.out.println(e.getMessage());
+	                }
+	                
 	            	displayLibraryMenu();
 	            	askMenuChoice();
 	                break;
@@ -337,6 +352,47 @@ public class LibraryApplication {
 		}
 		
 		return findBookId;
+	}
+	
+private Book validateBookId2(Scanner input) throws UserCancelException {
+		do {
+			try {
+				System.out.println(Constants.strPROMPT_ENTER_BOOKID);
+		    	String bookId = input.nextLine();
+		    	
+		    	if (bookId.equalsIgnoreCase("x")) {
+		    		logger.error("User {} selected x. Going back to main menu.", user.getName());
+		    		throw new UserCancelException(Constants.strERROR_MAIN_MENU);
+		    	}
+		    	
+				if (bookId.trim().isEmpty()) {
+					logger.error("Book ID cannot be empty or null.");
+					throw new BookNotFoundException("Book ID not found.");
+				}
+				
+				if (!bookId.matches("\\d+")) {
+					logger.error("Book ID must be numeric.");
+					throw new NumberFormatException("Book ID must be numeric.\n");
+				}
+				
+				logger.info("User {} searched for Book ID: {}", user.getName(), bookId);
+				Book findBookId = bookService.findById(bookId);
+				
+				if (findBookId == null ) {
+					logger.error("Book ID cannot be empty or null.");
+					throw new BookNotFoundException("Book ID cannot be empty or null");
+				}
+				
+				return findBookId;
+		    	
+			} catch (BookNotFoundException e) {
+				System.out.println(e.getMessage());
+			} catch (NumberFormatException e) {
+				System.out.println(e.getMessage());
+			}
+			
+		} while (true);
+		
 	}
 
 	private String validateAuthor(Scanner input) throws InvalidBookException, UserCancelException {
