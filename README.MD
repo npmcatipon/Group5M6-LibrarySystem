@@ -15,11 +15,12 @@ Things to do:
 - [x] Create pom.xml.
 - [x] Create connection to database.
 - [x] Initialize Books.
-- [ ] Create user validation in Login
-- [ ] Revise Option [2] Display Available Books
-- [ ] Revise Option [3] Display All Borrowed Books
-- [ ] Revise Option [4] Borrow Book
+- [x] Create user validation in Login
+- [x] Revise Option [1] Display All Books
+- [x] Revise Option [2] Display Available Books
+- [x] Revise Option [3] Display All Borrowed Books
+- [x] Revise Option [4] Borrow Book
 - [ ] Revise Option [5] Return Book
-- [ ] Revise Option [6] Add Book
+- [x] Revise Option [6] Add Book
 - [ ] Revise Option [7] Remove Book
 - [ ] Revise Option [8] Update Book
