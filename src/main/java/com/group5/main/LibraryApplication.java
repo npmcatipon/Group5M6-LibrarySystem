@@ -249,8 +249,9 @@ public class LibraryApplication {
 	                	
 	                	bookService.updateBook(updatedBook);
 	                	logger.info("Successfully updated Book ID: {}", book.getId());
-	                	
-	                	break;
+	                	System.out.printf("Successfully updated Book Title: %s to %s%n", 
+	                			book.getTitle(), 
+	                			updatedBook.getTitle());
 	                	
 	                } catch (UserCancelException e) {
 	                	System.out.println(e.getMessage());
@@ -457,8 +458,11 @@ private Book validateBookId(Scanner input) throws UserCancelException {
 				String userID = input.nextLine().trim();
 				
 				if (userID.trim().isEmpty() || userID == null) {
-					logger.warn("User ID is null or empty.");
 					throw new InvalidUserException("User ID is null or empty.");
+				}
+				
+				if (!userID.matches("\\d+")) {
+					throw new InvalidUserException("User ID must be numeric.");
 				}
 				
 				System.out.println(Constants.strPROMPT_USERNAME);
@@ -482,6 +486,7 @@ private Book validateBookId(Scanner input) throws UserCancelException {
 				
 			} catch (InvalidUserException e) {
 				System.out.println(e.getMessage());
+				logger.error(e.getMessage());
 			}
 
 		} while (!login);
