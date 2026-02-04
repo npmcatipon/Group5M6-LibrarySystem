@@ -137,44 +137,22 @@ public class LibraryApplication {
 	                
 	            case '4':
 	            	//[4] Borrow Book
-	            	//TODO: revise code
 	            	displayLibraryMenu();
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION4);
 	            	logger.info("User {} selected option [4] Borrow Book", user.getName());
-	            	do {
+	            	
+	            	System.out.println("List of available books.");
+	            	for (Book b: bookService.getAvailableBooks()) {
+	            		System.out.printf("%s | %s | %s%n", b.getId(), b.getTitle(), b.getAuthor());
+	            	}
+	            	try {
+	            		Book book = validateBookId(input);
+	            		validateLoanId(input, book);
 	            		
-	            		try {
-	            			
-	            			System.out.println("List of available books.");
-	    	            	for (Book b: bookService.getAvailableBooks()) {
-	    	            		System.out.printf("%s | %s | %s%n", b.getId(), b.getTitle(), b.getAuthor());
-	    	            	}
-	            			
-	            			Book book = validateBookId(input);
-	            			validateLoanId(input, book);
-	            			
-	            		} catch (UserCancelException e) {
-	            			
-	            			System.out.println(e.getMessage());
-	            			break;
-	            			
-	            		} catch (BookNotFoundException e) {
-	            			
-	            			System.out.println(e.getMessage());
-	            			continue;
-	            			
-	            		} catch (NumberFormatException e) {
-	            			
-	            			System.out.println(e.getMessage());
-	            			continue;
-	            		
-	            		} catch (InvalidLoanIdException e) {
-	            			
-	            			System.out.println(e.getMessage());
-	            			continue;
-	            		}
-	            		
-	            	} while (true);
+	            	} catch (UserCancelException e) {
+	            		logger.warn(e.getMessage());
+	            		System.out.println(e.getMessage());
+	            	}
 	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -230,13 +208,14 @@ public class LibraryApplication {
 	                
 	            case '7':
 	            	//[7] Remove Book
+	            	// TODO: code revision
 	                System.out.println(Constants.strDISPLAY_SELECTED_OPTION7);
 	                logger.info("User {} selected option [7] Remove Book", user.getName());
 	                
 	                libraryService.displayAvailableBooks();
 	                
 	                try {
-	                	Book book = validateBookId2(input);
+	                	Book book = validateBookId(input);
 	                	
 	                	logger.info("Deleting Book ID: {} by User {}", book.getId(), user.getName());
 	                	
@@ -284,77 +263,51 @@ public class LibraryApplication {
 		
 	}
 	
-	
-	private void validateLoanId(Scanner input, Book book) throws UserCancelException,InvalidLoanIdException {
+private void validateLoanId(Scanner input, Book book) throws UserCancelException {
+		do {
+			
+			System.out.println(Constants.strPROMPT_ENTER_LOANID);
+	    	String loanId = input.nextLine();
+			
+	    	try {
+				
+	    		if (loanId.equalsIgnoreCase("x")) {
+		    		logger.error("User {} selected x. Going back to main menu.", user.getName());
+		    		throw new UserCancelException(Constants.strERROR_MAIN_MENU);
+		    	}
+		    	
+		    	if (loanId.trim().isEmpty()) {
+		    		logger.error("Loan ID cannot be null or empty.");
+		    		throw new InvalidLoanIdException("Loan ID cannot be null or empty.");
+		    	}
+		    	
+		    	if (!loanId.matches("\\d+")) {
+		    		logger.error("Loan ID must be numeric.");
+		    		throw new NumberFormatException("Loan ID must be numeric");
+		    	}
+		    	
+		    	logger.info("User {}, input Loan ID: {}", user.getName(), loanId);
+	    		String loan = loanService.findLoanId(loanId);
+	    		
+	    		logger.info("User {}, adding {} with loan ID: {}.", user.getName(), book.getTitle(), loanId);
+	    		loanService.addLoanBook(loan, String.valueOf(book.getId()), String.valueOf(user.getId()));
+	    		
+	    		logger.info("Updating Book {} to be borrowed by {}", book.getTitle(), user.getName());
+	    		bookService.updateBorrowBook(book.getId());
+		    	
+			} catch (InvalidLoanIdException e) {
+				System.out.println(e.getMessage());
+			} catch (NumberFormatException e) {
+				System.out.println(e.getMessage());
+			} catch (DuplicateLoanIdException e) {
+				System.out.println(e.getMessage());
+			}
+	    	
+		} while (true);
 
-		System.out.println(Constants.strPROMPT_ENTER_LOANID);
-    	String loanId = input.nextLine();
-    	
-    	if (loanId.equalsIgnoreCase("x")) {
-    		logger.error("User {} selected x. Going back to main menu.", user.getName());
-    		throw new UserCancelException(Constants.strERROR_MAIN_MENU);
-    	}
-    	
-    	if (loanId.trim().isEmpty()) {
-    		logger.error("Loan ID cannot be null or empty.");
-    		throw new InvalidLoanIdException("Loan ID cannot be null or empty.");
-    	}
-    	
-    	if (!loanId.matches("\\d+")) {
-    		logger.error("Loan ID must be numeric.");
-    		throw new NumberFormatException("Loan ID must be numeric");
-    	}
-    	
-    	try {
-    		
-    		logger.info("User {}, input Loan ID: {}", user.getName(), loanId);
-    		String loan = loanService.findLoanId(loanId);
-    		
-    		logger.info("User {}, adding {} with loan ID: {}.", user.getName(), book.getTitle(), loanId);
-    		loanService.addLoanBook(loan, String.valueOf(book.getId()), String.valueOf(user.getId()));
-    		
-    		logger.info("Updating Book {} to be borrowed by {}", book.getTitle(), user.getName());
-    		bookService.updateBorrowBook(book.getId());
-    		
-    	} catch (DuplicateLoanIdException e) {
-    		logger.error("Duplicate Loan ID: {}", loanId);
-    		System.out.println(e.getMessage());
-    	}
-	}
+}
 
-	private Book validateBookId(Scanner input) throws BookNotFoundException, UserCancelException {
-		
-		System.out.println(Constants.strPROMPT_ENTER_BOOKID);
-    	String bookId = input.nextLine();
-    	
-    	if (bookId.equalsIgnoreCase("x")) {
-    		logger.error("User {} selected x. Going back to main menu.", user.getName());
-    		throw new UserCancelException(Constants.strERROR_MAIN_MENU);
-    	}
-    	
-		if (bookId.trim().isEmpty()) {
-			logger.error("Book ID cannot be empty or null.");
-			throw new BookNotFoundException("Book ID not found.");
-		}
-		
-		if (!bookId.matches("\\d+")) {
-			logger.error("Book ID must be numeric.");
-			throw new NumberFormatException("Book ID must be numeric.\n");
-		}
-		
-		logger.info("User {} searched for Book ID: {}", user.getName(), bookId);
-		Book findBookId = bookService.findById(bookId);
-		
-		
-		if (findBookId == null ) {
-			logger.error("Invalid Book ID Number.");
-			throw new BookNotFoundException("Invalid Book ID number.");
-		}
-		
-		return findBookId;
-	}
-	
-private Book validateBookId2(Scanner input) throws UserCancelException {
+private Book validateBookId(Scanner input) throws UserCancelException {
 		do {
 			try {
 				System.out.println(Constants.strPROMPT_ENTER_BOOKID);
@@ -367,7 +320,7 @@ private Book validateBookId2(Scanner input) throws UserCancelException {
 		    	
 				if (bookId.trim().isEmpty()) {
 					logger.error("Book ID cannot be empty or null.");
-					throw new BookNotFoundException("Book ID not found.");
+					throw new BookNotFoundException("Book ID cannot be empty or null.");
 				}
 				
 				if (!bookId.matches("\\d+")) {
@@ -379,8 +332,8 @@ private Book validateBookId2(Scanner input) throws UserCancelException {
 				Book findBookId = bookService.findById(bookId);
 				
 				if (findBookId == null ) {
-					logger.error("Book ID cannot be empty or null.");
-					throw new BookNotFoundException("Book ID cannot be empty or null");
+					logger.error("Invalid Book ID number.");
+					throw new BookNotFoundException("Invalid Book ID number.");
 				}
 				
 				return findBookId;
