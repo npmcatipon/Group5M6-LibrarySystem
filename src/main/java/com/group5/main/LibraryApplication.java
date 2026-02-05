@@ -141,10 +141,8 @@ public class LibraryApplication {
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION4);
 	            	logger.info("User {} selected option [4] Borrow Book", user.getName());
 	            	
-	            	System.out.println("List of available books.");
-	            	for (Book b: bookService.getAvailableBooks()) {
-	            		System.out.printf("%s | %s | %s%n", b.getId(), b.getTitle(), b.getAuthor());
-	            	}
+	            	libraryService.displayAvailableBooks();
+
 	            	try {
 	            		Book book = validateBookId(input);
 	            		validateLoanId(input, book);
@@ -161,12 +159,21 @@ public class LibraryApplication {
 	                
 	            case '5':
 	            	//[5] Return Book
+	            	// TODO: code revision
 	            	displayLibraryMenu();
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION5);
-	            	String bookTitle = input.nextLine();
-	            	
 	            	logger.info("User {} selected option [5] Return Book", user.getName());
 
+	            	libraryService.displayAllBorrowedBooks();
+
+	            	try {
+	            		
+	            		String bookId = validateBorrowedBook(input);
+	            		
+	            	} catch (UserCancelException e) {
+	            		logger.error(e.getMessage());
+	            	}
+	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
 	                break;
@@ -234,7 +241,6 @@ public class LibraryApplication {
 	                
 	            case '8':
 	            	//[8] Update Book
-	            	//TODO: revision of code
 	                System.out.println(Constants.strDISPLAY_SELECTED_OPTION8);
 	                logger.info("User {} selected option [8] Update Book", user.getName());
 
@@ -283,6 +289,35 @@ public class LibraryApplication {
 		
 	}
 	
+private String validateBorrowedBook(Scanner input) throws UserCancelException {
+	do {
+		try {
+			System.out.println("Please enter Book ID: ");
+			String bookId = input.nextLine();
+			
+			if (bookId.equalsIgnoreCase("x")) {
+				throw new UserCancelException("User " + user.getName() + " selected x. Going back to main menu.");
+			}
+			
+			if (bookId.trim().isEmpty()) {
+				throw new InvalidBookException("Book ID cannot be null or empty.");
+			}
+			
+			if (!bookId.matches("\\d+")) {
+				throw new NumberFormatException("Book ID must be numeric.");
+			}
+			
+			String loanId = loanService.findReturnBookId(bookId);
+			System.out.println("loan id is " + loanId);
+			
+		} catch (InvalidBookException e) {
+			System.out.println(e.getMessage());
+		} catch (NumberFormatException e) {
+			System.out.println(e.getMessage());
+		}
+	} while (true);
+}
+
 private Book askUpdateBook(Scanner input, Book book) 
 		throws UserCancelException {
 	
@@ -293,7 +328,7 @@ private Book askUpdateBook(Scanner input, Book book)
 			String newBookTitle = input.nextLine();
 
 			if (newBookTitle.equalsIgnoreCase("x")) {
-				throw new UserCancelException("User {} selected x. Going back to main menu.");
+				throw new UserCancelException("User " + user.getName() + " selected x. Going back to main menu.");
 			}
 
 			if (newBookTitle.trim().isEmpty()) {
@@ -353,6 +388,8 @@ private void validateLoanId(Scanner input, Book book) throws UserCancelException
 	    		
 	    		logger.info("Updating Book {} to be borrowed by {}", book.getTitle(), user.getName());
 	    		bookService.updateBorrowBook(book.getId());
+	    		
+	    		break;
 		    	
 			} catch (InvalidLoanIdException e) {
 				System.out.println(e.getMessage());
