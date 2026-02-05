@@ -1,4 +1,4 @@
-# Group 5 Library System  
+# Group 5 Library System (Module 6)  
 ## How to create database, table and insert dummy data.
 ```sql
 psql.exe -U postgres -f create-database.sql
