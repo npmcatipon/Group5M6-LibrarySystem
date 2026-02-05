@@ -20,7 +20,7 @@ Things to do:
 - [x] Revise Option [2] Display Available Books
 - [x] Revise Option [3] Display All Borrowed Books
 - [x] Revise Option [4] Borrow Book
-- [ ] Revise Option [5] Return Book
+- [x] Revise Option [5] Return Book
 - [x] Revise Option [6] Add Book
 - [x] Revise Option [7] Remove Book
 - [x] Revise Option [8] Update Book
