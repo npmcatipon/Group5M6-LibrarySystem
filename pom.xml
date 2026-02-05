@@ -8,13 +8,14 @@
   <artifactId>group5</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
-  <name>M5ProjectUpdatedLibrarySystem</name>
+  <name>Module 6 ProjectUpdatedLibrarySystem</name>
   <description>Group 5 Library System</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>7</maven.compiler.source>
-    <maven.compiler.target>7</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.release>17</maven.compiler.release>
   </properties>
 
   <dependencies>
@@ -33,7 +34,13 @@
 		<artifactId>logback-classic</artifactId>
 		<version>1.4.14</version>
 	</dependency>
+	<dependency>
+		<groupId>org.hibernate.orm</groupId>
+		<artifactId>hibernate-core</artifactId>
+		<version>7.1.11.Final</version>
+	</dependency>
   </dependencies>
+  
   
   
 
