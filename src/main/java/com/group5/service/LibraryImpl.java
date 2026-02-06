@@ -3,6 +3,10 @@ package com.group5.service;
 import com.group5.model.Book;
 import com.group5.model.Library;
 import com.group5.service.impl.BookServiceImpl;
+import com.group5.util.EntityManagerUtil;
+
+import jakarta.persistence.EntityManager;
+
 import com.group5.constants.Constants;
 import com.group5.dao.impl.BookDAOImpl;
 
@@ -10,7 +14,9 @@ public class LibraryImpl implements LibraryService {
 	
 	public Library library;
 	
-	private BookService bookService = new BookServiceImpl(new BookDAOImpl());
+	private final EntityManager em = EntityManagerUtil.getInstance().createEntityManager();
+	
+	private BookService bookService = new BookServiceImpl(em);
 
 	private static final int DISPLAY_ALL_BOOKS       =  1;
 	private static final int DISPLAY_AVAILABLE_BOOKS =  2;
