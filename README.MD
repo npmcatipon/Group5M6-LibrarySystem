@@ -11,4 +11,18 @@ The command above will create the following tables.
 - loan
 
 Things to do:
-- [ ] Add files
+### 1. Migrate to Maven Project
+- [x] import hibernate-core and postgresql dependencies in pom.xml
+- [x] configure persistence.xml
+- [x] configure jdbc connection
+### 2. Create Entities using JPA annotations
+- [x] put all entities in a single package
+- [x] create entity class for Book, Loan and User
+### 3. Practice Repository Pattern
+- [ ] create repository pacakge and put all Repository classes there
+- [ ] create repository interface
+- [ ] create repository implementation class per entity class
+### 4. Retain all functionalities from Module 5 Project
+- [ ] display all books, display available books, display all borrowed books, borrow book, return book, add book, remove book, update book
+- [ ] try to put these functionalities in a service classes (BookService)
+- [ ] put service class in service package
