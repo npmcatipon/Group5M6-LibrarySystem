@@ -5,36 +5,70 @@ import java.util.List;
 import com.group5.model.Book;
 import com.group5.repository.Repository;
 
+import jakarta.persistence.EntityManager;
+
 public class BookRepositoryImpl implements Repository<Book, Long> {
 
+	private final EntityManager em;
+	
+	public BookRepositoryImpl (EntityManager em) {
+		this.em = em;
+	}
+	
 	@Override
-	public Book save(Book entity) {
-		// TODO Auto-generated method stub
-		return null;
+	public Book save(Book book) {
+		
+		if (book.getId() == null) {
+			em.persist(book);
+		} else {
+			em.merge(book);
+		}
+		
+		return book;
 	}
 
 	@Override
-	public void delete(Book entity) {
-		// TODO Auto-generated method stub
+	public void delete(Book book) {
+		
+		em.remove(em.contains(book) ? book : em.merge(book));
 		
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		// TODO Auto-generated method stub
+		
+		Book book = findById(id);
+		
+		if (book != null ) {
+			delete(book);
+		}
 		
 	}
 
 	@Override
 	public Book findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return em.find(Book.class, id);
+		
 	}
 
 	@Override
 	public List<Book> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return em.createQuery("SELECT b FROM book b", Book.class).getResultList();
+		
+	}
+	
+	public List<Book> findAvailable() {
+		
+		return em.createQuery("Select b FROM book b WHERE b.is_borrowed = false", Book.class).getResultList();
+		
+	}
+	
+	public List<Book> findBorrowed() {
+		
+		return em.createQuery("Select b from book b WHERE b.is_borrowed = true", Book.class).getResultList();
+		
 	}
 
 }
