@@ -1,26 +1,42 @@
 package com.group5.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "book")
 public class Book {
 	
-	private String id;
+	@Id
+	@GeneratedValue ( strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column ( name = "title",
+			  nullable = false,
+			  columnDefinition = "VARCHAR(255)")
 	private String title;
+	
+	@Column ( name = "author",
+			  nullable = false,
+			  columnDefinition =  "VARCHAR(255)")
 	private String author;
+	
+	@Column ( name = "is_borrowed",
+			  nullable = false,
+			  columnDefinition = "boolean")
 	private boolean isBorrowed;
 
 	public Book () {
 	}
-
-	public Book (String id, String title, String author, boolean isBorrowed) {
-		this.id = id;
-		this.title = title;
-		this.author = author;
-		this.isBorrowed = isBorrowed;
-	}
 	
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getTitle() {
