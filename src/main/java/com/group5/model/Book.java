@@ -26,7 +26,8 @@ public class Book {
 	private String author;
 	
 	@Column ( name = "is_borrowed",
-			  nullable = false )
+			  nullable = false,
+			  columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private boolean isBorrowed;
 
 	public Book () {
