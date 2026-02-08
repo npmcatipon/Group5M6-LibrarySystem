@@ -37,10 +37,11 @@ public class EntityManagerUtil {
 	}
 	
 	public void closeEntityManager(EntityManager em) {
-		
+
 		if (isOpen(em)) {
 			em.close();
 		}
+		
 	}
 	
 	public void shutdownFactory() {
@@ -48,7 +49,6 @@ public class EntityManagerUtil {
 		if (emf.isOpen()) {
 			emf.close();
 		}
-		
 	}
 
 }
