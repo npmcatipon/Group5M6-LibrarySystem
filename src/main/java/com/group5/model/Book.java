@@ -28,7 +28,6 @@ public class Book {
 	@Column ( name = "is_borrowed",
 			  nullable = false,
 			  columnDefinition = "BOOLEAN DEFAULT FALSE")
-
 	private boolean isBorrowed;
 
 	public Book () {
