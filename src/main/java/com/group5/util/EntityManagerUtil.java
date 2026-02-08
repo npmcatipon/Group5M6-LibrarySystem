@@ -8,6 +8,7 @@ public class EntityManagerUtil {
 	
 	private static EntityManagerUtil instance;
 	
+	
 	private final EntityManagerFactory emf;
 
 	private  EntityManagerUtil() {
