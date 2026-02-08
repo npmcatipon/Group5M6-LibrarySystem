@@ -215,11 +215,10 @@ public class LibraryApplication {
 	            		newBook.setTitle(title);
 	            		newBook.setAuthor(author);
 
-	            		System.out.println(newBook.getId());
-	            		
 	            		bookService.addBook(newBook);
 	            		
 	            		logger.info("Successfully added {}.", newBook.getTitle());
+	            		System.out.println("Successfully added " + newBook.getTitle());
 	            		
 	            	} catch (UserCancelException e) {
 	            		logger.warn(e.getMessage());
