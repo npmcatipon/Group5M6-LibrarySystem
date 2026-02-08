@@ -1,37 +1,41 @@
 package com.group5.service.impl;
 
-import com.group5.dao.LoanDAO;
-import com.group5.exception.DuplicateLoanIdException;
-import com.group5.exception.InvalidBorrowedBookIdException;
 import com.group5.model.Loan;
+import com.group5.repository.impl.LoanRepositoryImpl;
 import com.group5.service.LoanService;
+
+import jakarta.persistence.EntityManager;
 
 public class LoanServiceImpl implements LoanService {
 	
-	private final LoanDAO loanDAO;
+	private final EntityManager em;
 	
-	public LoanServiceImpl (LoanDAO loanDAO) {
-		this.loanDAO = loanDAO;
+	private final LoanRepositoryImpl loanRepository;
+	
+	public LoanServiceImpl (EntityManager em) {
+		this.em = em;
+		this.loanRepository = new LoanRepositoryImpl(em);
 	}
 
 	@Override
-	public String findLoanId(String loanId) throws DuplicateLoanIdException {
-		return this.loanDAO.findLoanId(loanId);
+	public Loan findById(Long id) {
+		
+		return loanRepository.findById(id);
+		
 	}
 
 	@Override
-	public void addLoanBook(String loanId, String bookId, String userId) {
-		loanDAO.addLoanBook(loanId, bookId, userId);
+	public void deleteLoanId(Loan loan) {
+		
+		loanRepository.delete(loan);
+		
 	}
 
 	@Override
-	public Loan findReturnBookId(String loanId) throws InvalidBorrowedBookIdException{
-		return loanDAO.findReturnBookId(loanId);
+	public void addLoan(Loan loan) {
+		
+		loanRepository.save(loan);
+		
 	}
-
-	@Override
-	public void deleteLoanId(String loanId) {
-		loanDAO.deleteLoanId(loanId);
-	}
-
+	
 }

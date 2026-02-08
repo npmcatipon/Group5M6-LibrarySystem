@@ -53,6 +53,10 @@ import com.group5.service.UserService;
 import com.group5.service.impl.BookServiceImpl;
 import com.group5.service.impl.LoanServiceImpl;
 import com.group5.service.impl.UserServiceImpl;
+import com.group5.util.EntityManagerUtil;
+
+import jakarta.persistence.EntityManager;
+
 import com.group5.constants.Constants;
 import com.group5.dao.impl.BookDAOImpl;
 import com.group5.dao.impl.LoanDAOImpl;
@@ -71,9 +75,14 @@ public class LibraryApplication {
 	
 	private User user;
 	private LibraryService libraryService;
-	private final UserService userService = new UserServiceImpl(new UserDAOImpl());
-	private BookService bookService = new BookServiceImpl(new BookDAOImpl());
-	private LoanService loanService = new LoanServiceImpl(new LoanDAOImpl());
+	
+	private final EntityManager em = EntityManagerUtil.getInstance().createEntityManager();
+	
+	private UserService userService = new UserServiceImpl(em);
+	
+	private LoanService loanService = new LoanServiceImpl(em);
+	
+	private BookService bookService = new BookServiceImpl(em);
 	
 	public LibraryApplication () {
 
@@ -86,7 +95,7 @@ public class LibraryApplication {
 		
         Scanner input = new Scanner(System.in);
 
-    	validateUserLogin(input);
+        validateUserLogin(input);
     	
     	welcomeMenuChoice();
     	
@@ -163,29 +172,28 @@ public class LibraryApplication {
 	                
 	            case '5':
 	            	//[5] Return Book
-	            	// TODO: code revision
 	            	displayLibraryMenu();
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION5);
 	            	logger.info("User {} selected option [5] Return Book", user.getName());
 
-	            	libraryService.displayAllBorrowedBooks();
-
-	            	try {
-	            		
-	            		Loan loan = validateBorrowedBook(input);
-	            		
-	            		bookService.updateReturnBook(loan.getBookId());
-	            		logger.info("Updating borrow status of book id: {}.", loan.getBookId());
-	            		
-	            		loanService.deleteLoanId(loan.getLoanId());
-	            		logger.info("Removing Loan ID: {} in Loan table.", loan.getLoanId());
-	            		
-	            		System.out.println("Book ID: " + loan.getBookId() + " has been returned.");
-	            		
-	            	} catch (UserCancelException e) {
-	            		logger.error(e.getMessage());
-	            	} 
-	            	
+//	            	libraryService.displayAllBorrowedBooks();
+//
+//	            	try {
+//	            		
+//	            		Loan loan = validateBorrowedBook(input);
+//	            		
+//	            		bookService.updateReturnBook(loan.getBookId());
+//	            		logger.info("Updating borrow status of book id: {}.", loan.getBookId());
+//	            		
+//	            		loanService.deleteLoanId(loan.getLoanId());
+//	            		logger.info("Removing Loan ID: {} in Loan table.", loan.getLoanId());
+//	            		
+//	            		System.out.println("Book ID: " + loan.getBookId() + " has been returned.");
+//	            		
+//	            	} catch (UserCancelException e) {
+//	            		logger.error(e.getMessage());
+//	            	} 
+//	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
 	                break;
@@ -194,31 +202,28 @@ public class LibraryApplication {
 	            case '6':
 	            	//[6] Add Book
 	            	
+	            	displayLibraryMenu();
+	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION6);
 	            	logger.info("User {} selected option [6] Add Book", user.getName());
 	            	
-	            	do {
+	            	try {
 	            		
-	            		try {
-		            		
-		            		String title = validateTitle(input);
-		            		String author = validateAuthor(input);
-		            		
-		            		bookService.addBook(title, author);
-		            	
-		            	} catch (InvalidBookException e) {
-		            		
-		            		System.out.println(e.getMessage());
-		            		continue;
-		            		
-		            	} catch (UserCancelException e) {
-		            		
-		            		System.out.println(e.getMessage());
-		            		break;
-						}
+	            		String title = validateTitle(input);
+	            		String author = validateAuthor(input);
 	            		
-	            		break;
+	            		Book newBook = new Book();
+	            		newBook.setTitle(title);
+	            		newBook.setAuthor(author);
+
+	            		System.out.println(newBook.getId());
 	            		
-	            	} while (true);
+	            		bookService.addBook(newBook);
+	            		
+	            		logger.info("Successfully added {}.", newBook.getTitle());
+	            		
+	            	} catch (UserCancelException e) {
+	            		logger.warn(e.getMessage());
+	            	} 
 	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -230,21 +235,21 @@ public class LibraryApplication {
 	                System.out.println(Constants.strDISPLAY_SELECTED_OPTION7);
 	                logger.info("User {} selected option [7] Remove Book", user.getName());
 	                
-	                libraryService.displayAvailableBooks();
-	                
-	                try {
-	                	Book book = validateBookId(input);
-	                	
-	                	logger.info("Deleting Book ID: {} by User {}", book.getId(), user.getName());
-	                	
-	                	bookService.deleteBook(String.valueOf(book.getId()));
-	                	
-	                	System.out.printf("User {} has deleted Book ID: {}.", user.getName(), book.getId());
-	                	logger.info("Book {}, has been deleted by {}.", book.getTitle(), user.getName());
-	                	
-	                } catch (UserCancelException e) {
-	                	System.out.println(e.getMessage());
-	                }
+//	                libraryService.displayAvailableBooks();
+//	                
+//	                try {
+//	                	Book book = validateBookId(input);
+//	                	
+//	                	logger.info("Deleting Book ID: {} by User {}", book.getId(), user.getName());
+//	                	
+//	                	bookService.deleteBook(String.valueOf(book.getId()));
+//	                	
+//	                	System.out.printf("User {} has deleted Book ID: {}.", user.getName(), book.getId());
+//	                	logger.info("Book {}, has been deleted by {}.", book.getTitle(), user.getName());
+//	                	
+//	                } catch (UserCancelException e) {
+//	                	System.out.println(e.getMessage());
+//	                }
 	                
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -256,25 +261,25 @@ public class LibraryApplication {
 	                System.out.println(Constants.strDISPLAY_SELECTED_OPTION8);
 	                logger.info("User {} selected option [8] Update Book", user.getName());
 
-	                libraryService.displayAllBooks();
-	                
-	                try {
-	                	
-	                	Book book = validateBookId(input);
-	                	logger.info("User {} is updating Book ID: {}.", user.getName(), book.getId());
-	                	
-	                	Book updatedBook = askUpdateBook(input, book);
-	                	
-	                	bookService.updateBook(updatedBook);
-	                	logger.info("Successfully updated Book ID: {}", book.getId());
-	                	System.out.printf("Successfully updated Book Title: %s to %s%n", 
-	                			book.getTitle(), 
-	                			updatedBook.getTitle());
-	                	
-	                } catch (UserCancelException e) {
-	                	System.out.println(e.getMessage());
-	                	logger.error(e.getMessage());
-	                }
+//	                libraryService.displayAllBooks();
+//	                
+//	                try {
+//	                	
+//	                	Book book = validateBookId(input);
+//	                	logger.info("User {} is updating Book ID: {}.", user.getName(), book.getId());
+//	                	
+//	                	Book updatedBook = askUpdateBook(input, book);
+//	                	
+//	                	bookService.updateBook(updatedBook);
+//	                	logger.info("Successfully updated Book ID: {}", book.getId());
+//	                	System.out.printf("Successfully updated Book Title: %s to %s%n", 
+//	                			book.getTitle(), 
+//	                			updatedBook.getTitle());
+//	                	
+//	                } catch (UserCancelException e) {
+//	                	System.out.println(e.getMessage());
+//	                	logger.error(e.getMessage());
+//	                }
 	                
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -476,44 +481,61 @@ private Book validateBookId(Scanner input) throws UserCancelException {
 		
 	}
 
-	private String validateAuthor(Scanner input) throws InvalidBookException, UserCancelException {
+	private String validateAuthor(Scanner input) throws UserCancelException {
 		
 		do {
 			
-			System.out.println(Constants.strPROMPT_ENTER_BOOKAUTHOR);
-			String author = input.nextLine();
-			
-			if (author.trim().isEmpty() || author == null) {
-				logger.warn("Author cannot be null.");
-				throw new InvalidBookException(Constants.strERROR_NULL_AUTHOR);
+			try {
+				
+				System.out.println(Constants.strPROMPT_ENTER_BOOKAUTHOR);
+				String author = input.nextLine();
+				
+				if (author.trim().isEmpty() || author == null) {
+					logger.warn("Author cannot be null.");
+					throw new InvalidBookException(Constants.strERROR_NULL_AUTHOR);
+				}
+				
+				if (author.equalsIgnoreCase("x")) {
+					logger.warn("User {} selected x. Going back to main menu.", user.getName());
+					throw new UserCancelException(Constants.strERROR_MAIN_MENU);
+				}
+				
+				return author;
+			} catch (InvalidBookException e) {
+				logger.info(e.getMessage());
+				System.out.println(e.getMessage());
 			}
-			
-			if (author.equalsIgnoreCase("x")) {
-				logger.warn("User {} selected x. Going back to main menu.", user.getName());
-				throw new UserCancelException(Constants.strERROR_MAIN_MENU);
-			}
-			
-			return author;
 			
 		} while (true);
 	}
 
-	private String validateTitle(Scanner input) throws InvalidBookException, UserCancelException {
+	private String validateTitle(Scanner input) throws UserCancelException {
 		
-		System.out.println(Constants.strPROMPT_ENTER_BOOKTITLE);
-		String title = input.nextLine();
+		do {
+			
+			try {
+				
+				System.out.println(Constants.strPROMPT_ENTER_BOOKTITLE);
+				String title = input.nextLine();
 
-		if (title.trim().isEmpty() || title == null) {
-			logger.warn("Title cannot be null.");
-			throw new InvalidBookException("Title cannot be null or empty");
-		}
+				if (title.trim().isEmpty() || title == null) {
+					logger.warn("Title cannot be null.");
+					throw new InvalidBookException("Title cannot be null or empty");
+				}
 
-		if (title.equalsIgnoreCase("x")) {
-			logger.warn("User {} selected x. Going back to main menu.", user.getName());
-			throw new UserCancelException(Constants.strERROR_MAIN_MENU);
-		}
+				if (title.equalsIgnoreCase("x")) {
+					logger.warn("User {} selected x. Going back to main menu.", user.getName());
+					throw new UserCancelException(Constants.strERROR_MAIN_MENU);
+				}
+				
+				return title;
+				
+			} catch (InvalidBookException e) {
+				logger.info(e.getMessage());
+				System.out.println(e.getMessage());
+			}
 
-		return title;
+		} while (true);
 
 	}
 
@@ -542,11 +564,15 @@ private Book validateBookId(Scanner input) throws UserCancelException {
 					throw new InvalidUserException("Username is null or empty.");
 				}
 				
-				User userLogin = userService.isUserExisting(userID, username);
+				User userLogin = userService.findById(Long.valueOf(userID));
 				
 				if (userLogin == null) { 
 					logger.error("Invalid User ID and/or Username.");
 					throw new InvalidUserException("Invalid User ID and/or Username.");
+				}
+				
+				if (!userLogin.getName().equals(username)) {
+					throw new InvalidUserException("Username does not exist.");
 				}
 				
 				user = userLogin;

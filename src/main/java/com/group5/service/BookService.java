@@ -12,15 +12,15 @@ public interface BookService {
 
 	List<Book> getBorrowedBooks();
 
-	void addBook(String title, String author);
+	void addBook(Book book);
 
-	Book findById(String bookId);
+	Book findById(Long id);
 
 	void updateBorrowBook(String bookId);
 
 	void updateReturnBook(String bookId);
 
-	void deleteBook(String bookId);
+	void deleteBook(Long id);
 
 	void updateBook(Book book);
 }

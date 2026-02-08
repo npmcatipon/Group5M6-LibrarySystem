@@ -1,19 +1,24 @@
 package com.group5.service.impl;
 
-import com.group5.dao.UserDAO;
 import com.group5.model.User;
+import com.group5.repository.impl.UserRepositoryImpl;
 import com.group5.service.UserService;
+
+import jakarta.persistence.EntityManager;
 
 public class UserServiceImpl implements UserService {
 	
-	private final UserDAO userDAO;
+	private final EntityManager em;
 	
-	public UserServiceImpl(UserDAO userDAO) {
-		this.userDAO = userDAO;
+	private final UserRepositoryImpl userRepository;
+	
+	public UserServiceImpl(EntityManager em) {
+		this.em = em;
+		this.userRepository = new UserRepositoryImpl(em);
 	}
 	
 	@Override
-	public User isUserExisting(String id, String username) {
-		return userDAO.isUserExisting(id, username);
+	public User findById(Long id) {
+		return userRepository.findById(id);
 	}
 }

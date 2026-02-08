@@ -2,60 +2,85 @@ package com.group5.service.impl;
 
 import java.util.List;
 
-import com.group5.dao.BookDAO;
 import com.group5.model.Book;
+import com.group5.repository.impl.BookRepositoryImpl;
 import com.group5.service.BookService;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
 public class BookServiceImpl implements BookService {
 
-	private final BookDAO bookDAO;
+	private final EntityManager em;
 	
-	public BookServiceImpl (BookDAO bookDAO) {
-		this.bookDAO = bookDAO;
+	private final BookRepositoryImpl bookRepository;
+	
+	public BookServiceImpl (EntityManager em) {
+		this.em = em;
+		this.bookRepository = new BookRepositoryImpl(em);
 	}
 	
 	@Override
 	public List<Book> getAllBooks() {
-		return bookDAO.getAllBooks();
+		return bookRepository.findAll();
 	}
 
 	@Override
 	public List<Book> getAvailableBooks() {
-		return bookDAO.getAvailableBooks();
+		return bookRepository.findAvailable();
 	}
 
 	@Override
 	public List<Book> getBorrowedBooks() {
-		return bookDAO.getBorrowedBooks();
+		return bookRepository.findBorrowed();
 	}
 	
 	@Override
-	public void addBook(String title, String author) {
-		bookDAO.addBook(title, author);
+	public void addBook(Book book) {
+		
+		EntityTransaction tx = em.getTransaction();
+		
+		try {
+			
+			tx.begin();
+			
+			bookRepository.save(book);
+			
+			tx.commit();
+			
+		} catch (Exception e) {
+			
+			if (tx.isActive()) {
+				
+				tx.rollback();
+				
+			}
+			
+			throw e;
+		}
+		
 	}
 	
-	public Book findById(String bookId) {
-		return bookDAO.findById(bookId);
+	public Book findById(Long Id) {
+		return bookRepository.findById(Id);
 	}
 
 	@Override
 	public void updateBorrowBook(String bookID) {
-		bookDAO.updateBorrowBook(bookID);
+	}
+	
+	@Override
+	public void updateReturnBook(String bookId) {
 	}
 
 	@Override
-	public void deleteBook(String bookID) {
-		bookDAO.deleteBook(bookID);
+	public void deleteBook(Long id) {
 	}
 
 	@Override
 	public void updateBook(Book book) {
-		bookDAO.updateBook(book);
 	}
 
-	@Override
-	public void updateReturnBook(String bookId) {
-		bookDAO.updateReturnBook(bookId);
-	}
+	
 
 }
