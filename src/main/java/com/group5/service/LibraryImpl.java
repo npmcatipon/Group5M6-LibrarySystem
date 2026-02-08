@@ -8,7 +8,6 @@ import com.group5.util.EntityManagerUtil;
 import jakarta.persistence.EntityManager;
 
 import com.group5.constants.Constants;
-import com.group5.dao.impl.BookDAOImpl;
 
 public class LibraryImpl implements LibraryService {
 	

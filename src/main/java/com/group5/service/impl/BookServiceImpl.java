@@ -7,6 +7,7 @@ import com.group5.repository.impl.BookRepositoryImpl;
 import com.group5.service.BookService;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
 public class BookServiceImpl implements BookService {
 
@@ -36,7 +37,28 @@ public class BookServiceImpl implements BookService {
 	
 	@Override
 	public void addBook(Book book) {
-		bookRepository.save(book);
+		
+		EntityTransaction tx = em.getTransaction();
+		
+		try {
+			
+			tx.begin();
+			
+			bookRepository.save(book);
+			
+			tx.commit();
+			
+		} catch (Exception e) {
+			
+			if (tx.isActive()) {
+				
+				tx.rollback();
+				
+			}
+			
+			throw e;
+		}
+		
 	}
 	
 	public Book findById(Long Id) {

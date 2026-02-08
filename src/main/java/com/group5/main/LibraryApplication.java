@@ -75,8 +75,14 @@ public class LibraryApplication {
 	
 	private User user;
 	private LibraryService libraryService;
-	private UserService userService = new UserServiceImpl(EntityManagerUtil.getInstance().createEntityManager());
-	private LoanService loanService = new LoanServiceImpl(new LoanDAOImpl());
+	
+	private final EntityManager em = EntityManagerUtil.getInstance().createEntityManager();
+	
+	private UserService userService = new UserServiceImpl(em);
+	
+	private LoanService loanService = new LoanServiceImpl(em);
+	
+	private BookService bookService = new BookServiceImpl(em);
 	
 	public LibraryApplication () {
 
@@ -166,7 +172,6 @@ public class LibraryApplication {
 	                
 	            case '5':
 	            	//[5] Return Book
-	            	// TODO: code revision
 	            	displayLibraryMenu();
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION5);
 	            	logger.info("User {} selected option [5] Return Book", user.getName());
@@ -197,32 +202,29 @@ public class LibraryApplication {
 	            case '6':
 	            	//[6] Add Book
 	            	
+	            	displayLibraryMenu();
+	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION6);
 	            	logger.info("User {} selected option [6] Add Book", user.getName());
 	            	
-//	            	do {
-//	            		
-//	            		try {
-//		            		
-//		            		String title = validateTitle(input);
-//		            		String author = validateAuthor(input);
-//		            		
-//		            		bookService.addBook(title, author);
-//		            	
-//		            	} catch (InvalidBookException e) {
-//		            		
-//		            		System.out.println(e.getMessage());
-//		            		continue;
-//		            		
-//		            	} catch (UserCancelException e) {
-//		            		
-//		            		System.out.println(e.getMessage());
-//		            		break;
-//						}
-//	            		
-//	            		break;
-//	            		
-//	            	} while (true);
-//	            	
+	            	try {
+	            		
+	            		String title = validateTitle(input);
+	            		String author = validateAuthor(input);
+	            		
+	            		Book newBook = new Book();
+	            		newBook.setTitle(title);
+	            		newBook.setAuthor(author);
+
+	            		System.out.println(newBook.getId());
+	            		
+	            		bookService.addBook(newBook);
+	            		
+	            		logger.info("Successfully added {}.", newBook.getTitle());
+	            		
+	            	} catch (UserCancelException e) {
+	            		logger.warn(e.getMessage());
+	            	} 
+	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
 	                break;
@@ -479,44 +481,61 @@ private Book validateBookId(Scanner input) throws UserCancelException {
 		
 	}
 
-	private String validateAuthor(Scanner input) throws InvalidBookException, UserCancelException {
+	private String validateAuthor(Scanner input) throws UserCancelException {
 		
 		do {
 			
-			System.out.println(Constants.strPROMPT_ENTER_BOOKAUTHOR);
-			String author = input.nextLine();
-			
-			if (author.trim().isEmpty() || author == null) {
-				logger.warn("Author cannot be null.");
-				throw new InvalidBookException(Constants.strERROR_NULL_AUTHOR);
+			try {
+				
+				System.out.println(Constants.strPROMPT_ENTER_BOOKAUTHOR);
+				String author = input.nextLine();
+				
+				if (author.trim().isEmpty() || author == null) {
+					logger.warn("Author cannot be null.");
+					throw new InvalidBookException(Constants.strERROR_NULL_AUTHOR);
+				}
+				
+				if (author.equalsIgnoreCase("x")) {
+					logger.warn("User {} selected x. Going back to main menu.", user.getName());
+					throw new UserCancelException(Constants.strERROR_MAIN_MENU);
+				}
+				
+				return author;
+			} catch (InvalidBookException e) {
+				logger.info(e.getMessage());
+				System.out.println(e.getMessage());
 			}
-			
-			if (author.equalsIgnoreCase("x")) {
-				logger.warn("User {} selected x. Going back to main menu.", user.getName());
-				throw new UserCancelException(Constants.strERROR_MAIN_MENU);
-			}
-			
-			return author;
 			
 		} while (true);
 	}
 
-	private String validateTitle(Scanner input) throws InvalidBookException, UserCancelException {
+	private String validateTitle(Scanner input) throws UserCancelException {
 		
-		System.out.println(Constants.strPROMPT_ENTER_BOOKTITLE);
-		String title = input.nextLine();
+		do {
+			
+			try {
+				
+				System.out.println(Constants.strPROMPT_ENTER_BOOKTITLE);
+				String title = input.nextLine();
 
-		if (title.trim().isEmpty() || title == null) {
-			logger.warn("Title cannot be null.");
-			throw new InvalidBookException("Title cannot be null or empty");
-		}
+				if (title.trim().isEmpty() || title == null) {
+					logger.warn("Title cannot be null.");
+					throw new InvalidBookException("Title cannot be null or empty");
+				}
 
-		if (title.equalsIgnoreCase("x")) {
-			logger.warn("User {} selected x. Going back to main menu.", user.getName());
-			throw new UserCancelException(Constants.strERROR_MAIN_MENU);
-		}
+				if (title.equalsIgnoreCase("x")) {
+					logger.warn("User {} selected x. Going back to main menu.", user.getName());
+					throw new UserCancelException(Constants.strERROR_MAIN_MENU);
+				}
+				
+				return title;
+				
+			} catch (InvalidBookException e) {
+				logger.info(e.getMessage());
+				System.out.println(e.getMessage());
+			}
 
-		return title;
+		} while (true);
 
 	}
 
