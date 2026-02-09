@@ -14,7 +14,7 @@ public class BookServiceImpl implements BookService {
 
 	private final EntityManager em;
 	
-	private final BookRepositoryImpl bookRepository;
+	private BookRepositoryImpl bookRepository;
 	
 	public BookServiceImpl (EntityManager em) {
 		this.em = em;
@@ -23,16 +23,19 @@ public class BookServiceImpl implements BookService {
 	
 	@Override
 	public List<Book> getAllBooks() {
+		em.clear();
 		return bookRepository.findAll();
 	}
 
 	@Override
 	public List<Book> getAvailableBooks() {
+		em.clear();
 		return bookRepository.findAvailable();
 	}
 
 	@Override
 	public List<Book> getBorrowedBooks() {
+		em.clear();
 		return bookRepository.findBorrowed();
 	}
 	

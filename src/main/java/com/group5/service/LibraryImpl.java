@@ -13,7 +13,7 @@ public class LibraryImpl implements LibraryService {
 	
 	public Library library;
 	
-	private final EntityManager em = EntityManagerUtil.getInstance().createEntityManager();
+	private EntityManager em = EntityManagerUtil.getInstance().createEntityManager();
 	
 	private BookService bookService = new BookServiceImpl(em);
 

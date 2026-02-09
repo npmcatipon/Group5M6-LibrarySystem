@@ -76,7 +76,7 @@ public class LibraryApplication {
 	private User user;
 	private LibraryService libraryService;
 	
-	private final EntityManager em = EntityManagerUtil.getInstance().createEntityManager();
+	private EntityManager em = EntityManagerUtil.getInstance().createEntityManager();
 	
 	private UserService userService = new UserServiceImpl(em);
 	
@@ -262,32 +262,25 @@ public class LibraryApplication {
 	                System.out.println(Constants.strDISPLAY_SELECTED_OPTION8);
 	                logger.info("User {} selected option [8] Update Book", user.getName());
 
-	                
-	                //TODO: revise the code [8] to accommodate hibernate pattern
-	                
 	                libraryService.displayAvailableBooks();
 	                
-	                
-	                
-//	                libraryService.displayAllBooks();
-//	                
-//	                try {
-//	                	
-//	                	Book book = validateBookId(input);
-//	                	logger.info("User {} is updating Book ID: {}.", user.getName(), book.getId());
-//	                	
-//	                	Book updatedBook = askUpdateBook(input, book);
-//	                	
-//	                	bookService.updateBook(updatedBook);
-//	                	logger.info("Successfully updated Book ID: {}", book.getId());
-//	                	System.out.printf("Successfully updated Book Title: %s to %s%n", 
-//	                			book.getTitle(), 
-//	                			updatedBook.getTitle());
-//	                	
-//	                } catch (UserCancelException e) {
-//	                	System.out.println(e.getMessage());
-//	                	logger.error(e.getMessage());
-//	                }
+	                try {
+	                	
+	                	Book book = validateBookId(input);
+	                	
+	                	Book updateBook = askUpdateBook(input, book);
+	                	
+	                	bookService.addBook(updateBook);
+	                	
+	                	System.out.println("Update of Book ID: " + updateBook.getId() + " is successful.");
+	                	
+	                	logger.info("Book ID: {} title: {} author {} has been updated to ", book.getId(), book.getTitle(), book.getAuthor());
+	                	logger.info("Book ID: {} title: {} author {}.", updateBook.getId(), updateBook.getTitle(), updateBook.getAuthor());
+	                	
+	                } catch (UserCancelException e) {
+	                	
+	                	logger.warn(e.getMessage());
+	                }
 	                
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -391,8 +384,10 @@ private Book askUpdateBook(Scanner input, Book book)
 				throw new InvalidBookException("Book Title cannot be null or empty.");
 			}
 
-			Book newBook = new Book(book.getId(), newBookTitle, newBookAuthor, book.isBorrowed());
-			return newBook;
+			book.setTitle(newBookTitle);
+			book.setAuthor(newBookAuthor);
+			
+			return book;
 			
 		} catch (InvalidBookException e) {
 			System.out.println(e.getMessage());
