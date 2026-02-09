@@ -70,11 +70,50 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public void updateBorrowBook(String bookID) {
+	public void updateBorrowBook(Book book) {
+		
+		EntityTransaction tx = em.getTransaction();
+		
+		try {
+			tx.begin();
+			
+			book.setIsBorrowed(true);
+			
+			tx.commit();
+		} catch (Exception e) {
+			
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+
+			System.out.println(e.getMessage());
+			
+			throw e;
+		}
+		
 	}
 	
 	@Override
-	public void updateReturnBook(String bookId) {
+	public void updateReturnBook(Long id) {
+		
+EntityTransaction tx = em.getTransaction();
+		
+		try {
+			tx.begin();
+			
+			
+			
+			tx.commit();
+		} catch (Exception e) {
+			
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+
+			System.out.println(e.getMessage());
+			
+			throw e;
+		}
 	}
 
 	@Override
