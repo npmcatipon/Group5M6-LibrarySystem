@@ -56,15 +56,11 @@ import com.group5.service.impl.BookServiceImpl;
 import com.group5.service.impl.LoanServiceImpl;
 import com.group5.service.impl.UserServiceImpl;
 import com.group5.util.EntityManagerUtil;
-import com.sun.org.apache.bcel.internal.Const;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
 import com.group5.constants.Constants;
-import com.group5.dao.impl.BookDAOImpl;
-import com.group5.dao.impl.LoanDAOImpl;
-import com.group5.dao.impl.UserDAOImpl;
 import com.group5.exception.BookNotFoundException;
 import com.group5.exception.DuplicateLoanIdException;
 import com.group5.exception.InvalidBookException;
@@ -241,7 +237,6 @@ public class LibraryApplication {
 	                logger.info("User {} selected option [7] Remove Book", user.getName());
 	                
 	                
-	                //TODO: revision of code for hibernate pattern
 	                libraryService.displayAvailableBooks();
 	                
 	                try {
@@ -256,22 +251,6 @@ public class LibraryApplication {
 	                } catch (UserCancelException e) {
 	                	System.out.println(e.getMessage());
 	                }
-	                
-//	                libraryService.displayAvailableBooks();
-//	                
-//	                try {
-//	                	Book book = validateBookId(input);
-//	                	
-//	                	logger.info("Deleting Book ID: {} by User {}", book.getId(), user.getName());
-//	                	
-//	                	bookService.deleteBook(String.valueOf(book.getId()));
-//	                	
-//	                	System.out.printf("User {} has deleted Book ID: {}.", user.getName(), book.getId());
-//	                	logger.info("Book {}, has been deleted by {}.", book.getTitle(), user.getName());
-//	                	
-//	                } catch (UserCancelException e) {
-//	                	System.out.println(e.getMessage());
-//	                }
 	                
 	            	displayLibraryMenu();
 	            	askMenuChoice();
