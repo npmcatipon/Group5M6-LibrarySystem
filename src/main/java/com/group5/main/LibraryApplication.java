@@ -149,8 +149,6 @@ public class LibraryApplication {
 	            case '4':
 	            	//[4] Borrow Book
 	            	
-	            	//TODO: Revision of borrow book
-	            	
 	            	displayLibraryMenu();
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION4);
 	            	logger.info("User {} selected option [4] Borrow Book", user.getName());
