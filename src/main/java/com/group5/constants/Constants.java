@@ -113,6 +113,12 @@ public abstract class Constants {
 	
 	public static final String strERROR_NULL_AUTHOR		= " Author cannot be null or empty.";
 	
+	public static final String strERROR_NULL_BOOK_ID    = " Book ID cannot be empty or null.";
+	
+	public static final String strERROR_BOOK_ID_MUST_BE_NUMERIC = " Book ID must be numeric.";
+	
+	public static final String strERROR_INVALID_BOOK_ID = "Book ID is invalid.";
+	
 	public static final String strERROR_MAIN_MENU		= " Going back to Main Menu. ";
 	
 }

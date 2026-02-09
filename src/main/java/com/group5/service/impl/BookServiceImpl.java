@@ -6,6 +6,7 @@ import com.group5.model.Book;
 import com.group5.repository.impl.BookRepositoryImpl;
 import com.group5.service.BookService;
 
+import ch.qos.logback.classic.Logger;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
@@ -75,6 +76,27 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public void deleteBook(Long id) {
+		EntityTransaction tx = em.getTransaction();
+		
+		try {
+			
+			tx.begin();
+			
+			bookRepository.deleteById(id);
+			
+			tx.commit();
+			
+		} catch (Exception e) {
+			
+			if (tx.isActive()) {
+				
+				tx.rollback();
+			}
+			
+			System.out.println(e.getMessage());
+			
+		}
+		
 	}
 
 	@Override

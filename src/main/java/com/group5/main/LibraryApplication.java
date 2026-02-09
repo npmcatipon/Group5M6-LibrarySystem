@@ -38,6 +38,8 @@
 package com.group5.main;
 
 import java.util.Scanner;
+
+import org.hibernate.internal.build.AllowSysOut;
 //Added import for Logger and LoggerFactory 01.19.2026
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +56,10 @@ import com.group5.service.impl.BookServiceImpl;
 import com.group5.service.impl.LoanServiceImpl;
 import com.group5.service.impl.UserServiceImpl;
 import com.group5.util.EntityManagerUtil;
+import com.sun.org.apache.bcel.internal.Const;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
 import com.group5.constants.Constants;
 import com.group5.dao.impl.BookDAOImpl;
@@ -175,6 +179,8 @@ public class LibraryApplication {
 	            	displayLibraryMenu();
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION5);
 	            	logger.info("User {} selected option [5] Return Book", user.getName());
+	            	
+	            	bookService.getBorrowedBooks();
 
 //	            	libraryService.displayAllBorrowedBooks();
 //
@@ -233,6 +239,23 @@ public class LibraryApplication {
 	            	//[7] Remove Book
 	                System.out.println(Constants.strDISPLAY_SELECTED_OPTION7);
 	                logger.info("User {} selected option [7] Remove Book", user.getName());
+	                
+	                
+	                //TODO: revision of code for hibernate pattern
+	                libraryService.displayAvailableBooks();
+	                
+	                try {
+	                	
+	                	Book book = validateBookId(input);
+	                	
+	                	bookService.deleteBook(book.getId());
+	                	
+	                	System.out.println("Book ID: " + book.getId() + " successfully deleted.");
+	                	logger.info("User {} deleted book ID: {}.", user.getName(), book.getId());
+	                	
+	                } catch (UserCancelException e) {
+	                	System.out.println(e.getMessage());
+	                }
 	                
 //	                libraryService.displayAvailableBooks();
 //	                
@@ -452,20 +475,21 @@ private Book validateBookId(Scanner input) throws UserCancelException {
 		    	
 				if (bookId.trim().isEmpty()) {
 					logger.error("Book ID cannot be empty or null.");
-					throw new BookNotFoundException("Book ID cannot be empty or null.");
+					throw new BookNotFoundException(Constants.strERROR_NULL_BOOK_ID);
 				}
 				
 				if (!bookId.matches("\\d+")) {
 					logger.error("Book ID must be numeric.");
-					throw new NumberFormatException("Book ID must be numeric.\n");
+					throw new NumberFormatException(Constants.strERROR_BOOK_ID_MUST_BE_NUMERIC);
 				}
 				
 				logger.info("User {} searched for Book ID: {}", user.getName(), bookId);
-				Book findBookId = bookService.findById(bookId);
+				
+				Book findBookId = bookService.findById(Long.valueOf(bookId));
 				
 				if (findBookId == null ) {
 					logger.error("Invalid Book ID number.");
-					throw new BookNotFoundException("Invalid Book ID number.");
+					throw new BookNotFoundException(Constants.strERROR_INVALID_BOOK_ID);
 				}
 				
 				return findBookId;
