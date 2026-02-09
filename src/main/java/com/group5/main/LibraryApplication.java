@@ -262,6 +262,13 @@ public class LibraryApplication {
 	                System.out.println(Constants.strDISPLAY_SELECTED_OPTION8);
 	                logger.info("User {} selected option [8] Update Book", user.getName());
 
+	                
+	                //TODO: revise the code [8] to accommodate hibernate pattern
+	                
+	                libraryService.displayAvailableBooks();
+	                
+	                
+	                
 //	                libraryService.displayAllBooks();
 //	                
 //	                try {
