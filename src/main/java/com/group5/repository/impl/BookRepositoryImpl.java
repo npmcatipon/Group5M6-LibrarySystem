@@ -9,7 +9,7 @@ import jakarta.persistence.EntityManager;
 
 public class BookRepositoryImpl implements Repository<Book, Long> {
 
-	private final EntityManager em;
+	private EntityManager em;
 	
 	public BookRepositoryImpl (EntityManager em) {
 		this.em = em;
