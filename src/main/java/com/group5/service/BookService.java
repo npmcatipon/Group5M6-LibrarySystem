@@ -16,9 +16,9 @@ public interface BookService {
 
 	Book findById(Long id);
 
-	void updateBorrowBook(String bookId);
+	void updateBorrowBook(Book book);
 
-	void updateReturnBook(String bookId);
+	void updateReturnBook(Long id);
 
 	void deleteBook(Long id);
 

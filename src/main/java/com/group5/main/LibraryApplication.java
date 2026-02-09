@@ -148,6 +148,9 @@ public class LibraryApplication {
 	                
 	            case '4':
 	            	//[4] Borrow Book
+	            	
+	            	//TODO: Revision of borrow book
+	            	
 	            	displayLibraryMenu();
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION4);
 	            	logger.info("User {} selected option [4] Borrow Book", user.getName());
@@ -156,6 +159,7 @@ public class LibraryApplication {
 
 	            	try {
 	            		Book book = validateBookId(input);
+	            		
 	            		validateLoanId(input, book);
 	            		
 	            		System.out.println(user.getName() + " successfully loaned " + book.getTitle());
@@ -163,7 +167,8 @@ public class LibraryApplication {
 	            	} catch (UserCancelException e) {
 	            		logger.warn(e.getMessage());
 	            		System.out.println(e.getMessage());
-	            	}
+	            		
+	            	} 
 	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -274,8 +279,7 @@ public class LibraryApplication {
 	                	
 	                	System.out.println("Update of Book ID: " + updateBook.getId() + " is successful.");
 	                	
-	                	logger.info("Book ID: {} title: {} author {} has been updated to ", book.getId(), book.getTitle(), book.getAuthor());
-	                	logger.info("Book ID: {} title: {} author {}.", updateBook.getId(), updateBook.getTitle(), updateBook.getAuthor());
+	                	logger.info("User {} updated the book ID: {}.", user.getName(), updateBook.getId());
 	                	
 	                } catch (UserCancelException e) {
 	                	
@@ -420,14 +424,23 @@ private void validateLoanId(Scanner input, Book book) throws UserCancelException
 		    		throw new NumberFormatException("Loan ID must be numeric");
 		    	}
 		    	
-		    	logger.info("User {}, input Loan ID: {}", user.getName(), loanId);
-	    		String loan = loanService.findLoanId(loanId);
+	    		Loan loan = loanService.findById(Long.valueOf(loanId));
 	    		
+	    		if (loan != null) {
+	    			throw new DuplicateLoanIdException("Loan ID is existing");
+	    		}
+	    		
+	    		Loan newloan = new Loan();
+	    		newloan.setId(Long.valueOf(loanId));
+	    		newloan.setBookId(book.getId());
+	    		newloan.setUserId(user.getId());
+	    		
+	    		System.out.println(newloan.toString());
+	    		
+	    		loanService.addLoan(newloan);
 	    		logger.info("User {}, adding {} with loan ID: {}.", user.getName(), book.getTitle(), loanId);
-	    		loanService.addLoanBook(loan, String.valueOf(book.getId()), String.valueOf(user.getId()));
 	    		
-	    		logger.info("Updating Book {} to be borrowed by {}", book.getTitle(), user.getName());
-	    		bookService.updateBorrowBook(book.getId());
+	    		bookService.updateBorrowBook(book);
 	    		
 	    		break;
 		    	
