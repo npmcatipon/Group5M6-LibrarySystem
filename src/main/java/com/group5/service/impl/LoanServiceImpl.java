@@ -1,5 +1,7 @@
 package com.group5.service.impl;
 
+import java.util.Optional;
+
 import com.group5.model.Loan;
 import com.group5.repository.impl.LoanRepositoryImpl;
 import com.group5.service.LoanService;
@@ -60,6 +62,11 @@ public class LoanServiceImpl implements LoanService {
 		
 		
 		
+	}
+	
+	public Loan findBorrowedBook (Long bookid) {
+		
+		return loanRepository.findTopBorrowBookId(bookid);
 	}
 	
 }
