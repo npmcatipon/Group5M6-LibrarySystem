@@ -94,14 +94,14 @@ public class BookServiceImpl implements BookService {
 	}
 	
 	@Override
-	public void updateReturnBook(Long id) {
+	public void updateReturnBook(Book book) {
 		
-EntityTransaction tx = em.getTransaction();
+		EntityTransaction tx = em.getTransaction();
 		
 		try {
 			tx.begin();
 			
-			
+			book.setIsBorrowed(false);
 			
 			tx.commit();
 		} catch (Exception e) {

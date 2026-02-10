@@ -10,4 +10,6 @@ public interface LoanService {
 	
 	void deleteLoanId (Loan loan);
 	
+	Loan findBorrowedBook (Long id);
+	
 }

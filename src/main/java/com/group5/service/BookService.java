@@ -18,7 +18,7 @@ public interface BookService {
 
 	void updateBorrowBook(Book book);
 
-	void updateReturnBook(Long id);
+	void updateReturnBook(Book book);
 
 	void deleteBook(Long id);
 

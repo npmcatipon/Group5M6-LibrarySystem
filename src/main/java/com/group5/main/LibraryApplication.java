@@ -39,7 +39,6 @@ package com.group5.main;
 
 import java.util.Scanner;
 
-import org.hibernate.internal.build.AllowSysOut;
 //Added import for Logger and LoggerFactory 01.19.2026
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,14 +57,10 @@ import com.group5.service.impl.UserServiceImpl;
 import com.group5.util.EntityManagerUtil;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 
 import com.group5.constants.Constants;
 import com.group5.exception.BookNotFoundException;
-import com.group5.exception.DuplicateLoanIdException;
 import com.group5.exception.InvalidBookException;
-import com.group5.exception.InvalidBorrowedBookIdException;
-import com.group5.exception.InvalidLoanIdException;
 import com.group5.exception.InvalidUserException;
 import com.group5.exception.UserCancelException;
 
@@ -186,10 +181,13 @@ public class LibraryApplication {
 	            	try {
 	            		
 	            		Loan loan = validateBorrowedBook(input);
+	            		logger.info("user {} returned book id: {} with loan id: {} to the library.", user.getName(), loan.getBookId(), loan.getId());
 	            		
 	            	} catch (Exception e) {
 	            		System.out.println(e.getMessage());
 	            	}
+	            	
+	            	 
 //
 //	            	try {
 //	            		
@@ -336,7 +334,7 @@ private Loan validateBorrowedBook(Scanner input) throws UserCancelException {
 				throw new NumberFormatException("Book ID must be numeric.");
 			}
 			
-			Loan loan = loanService.findById(Long.valueOf(bookId));
+			Loan loan = loanService.findBorrowedBook(Long.valueOf(bookId));
 			
 			if (loan == null) {
 				throw new NullPointerException("Invalid Book ID.");
@@ -407,53 +405,25 @@ private Book askUpdateBook(Scanner input, Book book)
 	
 }
 
-private void validateLoanId(Scanner input, Book book) throws UserCancelException {
+private void validateLoanId(Scanner input, Book book) {
 		do {
 			
-			//System.out.println(Constants.strPROMPT_ENTER_LOANID);
-	    	//String loanId = input.nextLine();
-			
 	    	try {
-				
-//	    		if (loanId.equalsIgnoreCase("x")) {
-//		    		logger.error("User {} selected x. Going back to main menu.", user.getName());
-//		    		throw new UserCancelException(Constants.strERROR_MAIN_MENU);
-//		    	}
-//		    	
-//		    	if (loanId.trim().isEmpty()) {
-//		    		logger.error("Loan ID cannot be null or empty.");
-//		    		throw new InvalidLoanIdException("Loan ID cannot be null or empty.");
-//		    	}
-//		    	
-//		    	if (!loanId.matches("\\d+")) {
-//		    		logger.error("Loan ID must be numeric.");
-//		    		throw new NumberFormatException("Loan ID must be numeric");
-//		    	}
-//		    	
-//	    		Loan loan = loanService.findById(Long.valueOf(loanId));
-//	    		
-//	    		if (loan != null) {
-//	    			throw new DuplicateLoanIdException("Loan ID is existing");
-//	    		}
-	    		
 	    		Loan newloan = new Loan();
 	    		//newloan.setId(Long.valueOf(loanId));
 	    		newloan.setBookId(book.getId());
 	    		newloan.setUserId(user.getId());
 	    		
 	    		loanService.addLoan(newloan);
-	    		//logger.info("User {}, adding {} with loan ID: {}.", user.getName(), book.getTitle(), loanId);
+	    		logger.info("User {}, adding {} with loan ID: {}.", user.getName(), book.getTitle(), newloan.getId());
 	    		
 	    		bookService.updateBorrowBook(book);
+	    		logger.info("Set {} to borrowed.", book.getTitle());
 	    		
 	    		break;
-		    	
-//			} catch (InvalidLoanIdException e) {
-//				System.out.println(e.getMessage());
-			} catch (NumberFormatException e) {
+			} catch (Exception e) {
 				System.out.println(e.getMessage());
-//			} catch (DuplicateLoanIdException e) {
-//				System.out.println(e.getMessage());
+				logger.warn(e.getMessage());
 			}
 	    	
 		} while (true);

@@ -62,7 +62,7 @@ public class LoanRepositoryImpl implements Repository <Loan, Long> {
 	
 	public Loan findTopBorrowBookId(Long bookId) {
 		List <Loan> loan = em.createQuery(
-				"select l from Loan l where l.bookid = :bookid order by l.id desc",
+				"select l from Loan l where l.bookId = :bookid order by l.id desc",
 				Loan.class)
 				.setParameter("bookid", bookId)
 				.setMaxResults(1)
