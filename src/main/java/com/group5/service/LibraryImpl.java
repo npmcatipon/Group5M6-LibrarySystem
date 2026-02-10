@@ -24,32 +24,23 @@ public class LibraryImpl implements LibraryService {
 	
 	@Override
 	public void displayAllBooks() {
-		System.out.println("List of All Books.");
-    	for (Book b: bookService.getAllBooks()) {
-    		System.out.printf("%s | %s | %s%n", b.getId(), b.getTitle(), b.getAuthor());
-    	}
+		displayTableHeader(DISPLAY_ALL_BOOKS);
 	}
 
 
 	@Override
 	public void displayAvailableBooks() {
-		System.out.println("List of Available Books.");
-    	for (Book b: bookService.getAvailableBooks()) {
-    		System.out.printf("%s | %s | %s%n", b.getId(), b.getTitle(), b.getAuthor());
-    	}
+		displayTableHeader(DISPLAY_AVAILABLE_BOOKS);
 	}
 
 
 	@Override
 	public void displayAllBorrowedBooks() {
-		System.out.println("List of Borrowed Books.");
-    	for (Book b: bookService.getBorrowedBooks()) {
-    		System.out.printf("%s | %s | %s%n", b.getId(), b.getTitle(), b.getAuthor());
-    	}
+		displayTableHeader(DISPLAY_BORROWED_BOOKS);
     }
 
 
-	private static void displayTableHeader(int displayType) {
+	private void displayTableHeader(int displayType) {
 		//header
 
 		displayTableLine(displayType);
@@ -77,6 +68,11 @@ public class LibraryImpl implements LibraryService {
 					Constants.strTableColumnDelimiter);
 
 		}
+		
+		displayTableLine(displayType);
+		
+		displayTableDetails(displayType);
+		
 		displayTableLine(displayType);
 
 	}
@@ -90,12 +86,38 @@ public class LibraryImpl implements LibraryService {
 	 * 3 - borrowed books
 	 *
 	 */
-	private static int displayTableDetails(int displayType) {
-		return 0;
+	private void displayTableDetails(int displayType) {
+		if (displayType == DISPLAY_ALL_BOOKS) {
+			for (Book b: bookService.getAllBooks()) {
+				System.out.println("" +
+						Constants.strTableColumnDelimiter + padRight(String.valueOf(b.getId()),     Constants.maxLenBookId,     " ") +
+						Constants.strTableColumnDelimiter + padRight(b.getTitle(),  Constants.maxLenBookTitle,  " ") +
+						Constants.strTableColumnDelimiter + padRight(b.getAuthor(), Constants.maxLenBookAuthor, " ") +
+						Constants.strTableColumnDelimiter);
+			}
+		} else if (displayType == DISPLAY_AVAILABLE_BOOKS) {
+	    	for (Book b: bookService.getAvailableBooks()) {
+	    		System.out.println("" +
+						Constants.strTableColumnDelimiter + padRight(String.valueOf(b.getId()),     Constants.maxLenBookId,     " ") +
+						Constants.strTableColumnDelimiter + padRight(b.getTitle(),  Constants.maxLenBookTitle,  " ") +
+						Constants.strTableColumnDelimiter + padRight(b.getAuthor(), Constants.maxLenBookAuthor, " ") +
+						Constants.strTableColumnDelimiter);
+	    	}
+		} else if (displayType == DISPLAY_BORROWED_BOOKS) {
+			for (Book b: bookService.getBorrowedBooks()) {
+				System.out.println("" +
+						Constants.strTableColumnDelimiter + padRight(String.valueOf(b.getId()),     Constants.maxLenBookId,     " ") +
+						Constants.strTableColumnDelimiter + padRight(b.getTitle(),  Constants.maxLenBookTitle,  " ") +
+						Constants.strTableColumnDelimiter + padRight(b.getAuthor(), Constants.maxLenBookAuthor, " ") +
+						Constants.strTableColumnDelimiter);
+	    	}
+			
+		}
+			
 	}
 
 
-	private static void displayTableLine (int displayType) {
+	private void displayTableLine (int displayType) {
 		//header
 
 		if (displayType == DISPLAY_ALL_BOOKS || displayType == DISPLAY_AVAILABLE_BOOKS) {

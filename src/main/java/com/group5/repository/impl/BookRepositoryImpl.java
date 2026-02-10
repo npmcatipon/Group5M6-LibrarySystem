@@ -55,19 +55,20 @@ public class BookRepositoryImpl implements Repository<Book, Long> {
 	@Override
 	public List<Book> findAll() {
 		
-		return em.createQuery("SELECT b FROM Book b", Book.class).getResultList();
+		return em.createQuery("SELECT b FROM Book b order by id", Book.class).getResultList();
 		
 	}
 	
 	public List<Book> findAvailable() {
 		
-		return em.createQuery("Select b FROM Book b WHERE b.isBorrowed = false", Book.class).getResultList();
+		return em.createQuery("Select b FROM Book b WHERE b.isBorrowed = false order by id", Book.class).getResultList();
 		
 	}
 	
 	public List<Book> findBorrowed() {
 		
-		return em.createQuery("Select b from Book b WHERE b.isBorrowed = true", Book.class).getResultList();
+//		return em.createQuery("Select b from Book b WHERE b.isBorrowed = true order by id", Book.class).getResultList();
+		return em.createQuery("Select b.id, b.title, b.author, u.name from Book b WHERE b.isBorrowed = true order by id", Book.class).getResultList();
 		
 	}
 
