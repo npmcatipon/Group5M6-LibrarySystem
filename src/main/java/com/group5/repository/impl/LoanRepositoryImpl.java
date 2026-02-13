@@ -58,6 +58,34 @@ public class LoanRepositoryImpl implements Repository <Loan, Long> {
 		return em.createQuery("SELECT l FROM loan l", Loan.class).getResultList();
 		
 	}
+	
+	public Loan findTopBorrowBookId(Long bookId) {
+		List <Loan> loan = em.createQuery(
+				"select l from Loan l " +
+				"join fetch l.book b " +
+				"join fetch l.user u " +
+				"where b.id = :bookid " +
+				"order by l.id desc",
+				Loan.class)
+				.setParameter("bookid", bookId)
+				.getResultList();
+		
+		System.out.println(loan.get(0).getBookId());
+		
+		return loan.isEmpty() ? null : loan.get(0);
+	}
+
+	public List<Loan> displayBorrowedBook() {
+		List<Loan> loan = em.createQuery(
+				"select l from Loan l " +
+				"join fetch l.book b " +
+				"join fetch l.user u " +
+				"where b.isBorrowed = true and " +
+				"l.id = (select max(l2.id) from Loan l2 where l2.book = b)",
+				Loan.class)
+				.getResultList();
+		return loan;
+	}
 
 
 }

@@ -10,15 +10,13 @@ public interface BookService {
 
 	List<Book> getAvailableBooks();
 
-	List<Book> getBorrowedBooks();
-
 	void addBook(Book book);
 
 	Book findById(Long id);
 
 	void updateBorrowBook(Book book);
 
-	void updateReturnBook(Long id);
+	void updateReturnBook(Book book);
 
 	void deleteBook(Long id);
 
