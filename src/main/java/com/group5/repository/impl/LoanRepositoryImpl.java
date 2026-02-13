@@ -1,7 +1,6 @@
 package com.group5.repository.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.group5.model.Loan;
 import com.group5.repository.Repository;
@@ -62,11 +61,16 @@ public class LoanRepositoryImpl implements Repository <Loan, Long> {
 	
 	public Loan findTopBorrowBookId(Long bookId) {
 		List <Loan> loan = em.createQuery(
-				"select l from Loan l where l.bookId = :bookid order by l.id desc",
+				"select l from Loan l " +
+				"join fetch l.book b " +
+				"join fetch l.user u " +
+				"where b.id = :bookid " +
+				"order by l.id desc",
 				Loan.class)
 				.setParameter("bookid", bookId)
-				.setMaxResults(1)
 				.getResultList();
+		
+		System.out.println(loan.get(0).getBookId());
 		
 		return loan.isEmpty() ? null : loan.get(0);
 	}

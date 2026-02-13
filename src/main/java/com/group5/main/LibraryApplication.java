@@ -175,7 +175,6 @@ public class LibraryApplication {
 	            	logger.info("User {} selected option [5] Return Book", user.getName());
 	            	
 	            	
-	            	//TODO: Code revision for module 6
 	            	libraryService.displayAllBorrowedBooks();
 	            	
 	            	try {
@@ -187,24 +186,6 @@ public class LibraryApplication {
 	            		System.out.println(e.getMessage());
 	            	}
 	            	
-	            	 
-//
-//	            	try {
-//	            		
-//	            		Loan loan = validateBorrowedBook(input);
-//	            		
-//	            		bookService.updateReturnBook(loan.getBookId());
-//	            		logger.info("Updating borrow status of book id: {}.", loan.getBookId());
-//	            		
-//	            		loanService.deleteLoanId(loan.getLoanId());
-//	            		logger.info("Removing Loan ID: {} in Loan table.", loan.getLoanId());
-//	            		
-//	            		System.out.println("Book ID: " + loan.getBookId() + " has been returned.");
-//	            		
-//	            	} catch (UserCancelException e) {
-//	            		logger.error(e.getMessage());
-//	            	} 
-//	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
 	                break;
@@ -340,7 +321,7 @@ private Loan validateBorrowedBook(Scanner input) throws UserCancelException {
 				throw new NullPointerException("Invalid Book ID.");
 			}
 			
-			//logger.info("Validating borrowed book with Book ID: {} and Loan ID: {}.", bookId, loan.getLoanId());
+			logger.info("Validating borrowed book with Book ID: {} and Loan ID: {}.", loan.getBookId(), loan.getId());
 			
 			Book book = bookService.findById(Long.valueOf(bookId));
 			bookService.updateReturnBook(book);
@@ -413,6 +394,8 @@ private void validateLoanId(Scanner input, Book book) {
 	    		//newloan.setId(Long.valueOf(loanId));
 	    		newloan.setBookId(book.getId());
 	    		newloan.setUserId(user.getId());
+	    		newloan.setBook(book);
+	    		newloan.setUser(user);
 	    		
 	    		loanService.addLoan(newloan);
 	    		logger.info("User {}, adding {} with loan ID: {}.", user.getName(), book.getTitle(), newloan.getId());

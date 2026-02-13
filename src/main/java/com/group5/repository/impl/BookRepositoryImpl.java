@@ -67,8 +67,7 @@ public class BookRepositoryImpl implements Repository<Book, Long> {
 	
 	public List<Book> findBorrowed() {
 		
-//		return em.createQuery("Select b from Book b WHERE b.isBorrowed = true order by id", Book.class).getResultList();
-		return em.createQuery("Select b.id, b.title, b.author, u.name from Book b WHERE b.isBorrowed = true order by id", Book.class).getResultList();
+		return em.createQuery("Select b from Book b WHERE b.isBorrowed = true order by id", Book.class).getResultList();
 		
 	}
 
