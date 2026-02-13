@@ -10,8 +10,6 @@ public interface BookService {
 
 	List<Book> getAvailableBooks();
 
-	List<Book> getBorrowedBooks();
-
 	void addBook(Book book);
 
 	Book findById(Long id);

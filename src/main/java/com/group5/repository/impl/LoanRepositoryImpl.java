@@ -75,5 +75,17 @@ public class LoanRepositoryImpl implements Repository <Loan, Long> {
 		return loan.isEmpty() ? null : loan.get(0);
 	}
 
+	public List<Loan> displayBorrowedBook() {
+		List<Loan> loan = em.createQuery(
+				"select l from Loan l " +
+				"join fetch l.book b " +
+				"join fetch l.user u " +
+				"where b.isBorrowed = true " +
+				"order by l.id desc",
+				Loan.class)
+				.getResultList();
+		return loan;
+	}
+
 
 }

@@ -2,7 +2,9 @@ package com.group5.service;
 
 import com.group5.model.Book;
 import com.group5.model.Library;
+import com.group5.model.Loan;
 import com.group5.service.impl.BookServiceImpl;
+import com.group5.service.impl.LoanServiceImpl;
 import com.group5.util.EntityManagerUtil;
 
 import jakarta.persistence.EntityManager;
@@ -16,6 +18,7 @@ public class LibraryImpl implements LibraryService {
 	private EntityManager em = EntityManagerUtil.getInstance().createEntityManager();
 	
 	private BookService bookService = new BookServiceImpl(em);
+	private LoanService loanService = new LoanServiceImpl(em);
 
 	private static final int DISPLAY_ALL_BOOKS       =  1;
 	private static final int DISPLAY_AVAILABLE_BOOKS =  2;
@@ -104,11 +107,12 @@ public class LibraryImpl implements LibraryService {
 						Constants.strTableColumnDelimiter);
 	    	}
 		} else if (displayType == DISPLAY_BORROWED_BOOKS) {
-			for (Book b: bookService.getBorrowedBooks()) {
+			for (Loan l: loanService.getBorrowedBooks()) {
 				System.out.println("" +
-						Constants.strTableColumnDelimiter + padRight(String.valueOf(b.getId()),     Constants.maxLenBookId,     " ") +
-						Constants.strTableColumnDelimiter + padRight(b.getTitle(),  Constants.maxLenBookTitle,  " ") +
-						Constants.strTableColumnDelimiter + padRight(b.getAuthor(), Constants.maxLenBookAuthor, " ") +
+						Constants.strTableColumnDelimiter + padRight(String.valueOf(l.getBookId()),     Constants.maxLenBookId,     " ") +
+						Constants.strTableColumnDelimiter + padRight(l.getBook().getTitle(),  Constants.maxLenBookTitle,  " ") +
+						Constants.strTableColumnDelimiter + padRight(l.getBook().getAuthor(), Constants.maxLenBookAuthor, " ") +
+						Constants.strTableColumnDelimiter + padRight(l.getUser().getName(), Constants.maxLenUserName,   " ") +
 						Constants.strTableColumnDelimiter);
 	    	}
 			

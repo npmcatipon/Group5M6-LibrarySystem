@@ -3,7 +3,9 @@ package com.group5.service.impl;
 import java.util.List;
 
 import com.group5.model.Book;
+import com.group5.model.Loan;
 import com.group5.repository.impl.BookRepositoryImpl;
+import com.group5.repository.impl.LoanRepositoryImpl;
 import com.group5.service.BookService;
 
 import ch.qos.logback.classic.Logger;
@@ -15,6 +17,7 @@ public class BookServiceImpl implements BookService {
 	private final EntityManager em;
 	
 	private BookRepositoryImpl bookRepository;
+	private LoanRepositoryImpl loanRepository;
 	
 	public BookServiceImpl (EntityManager em) {
 		this.em = em;
@@ -33,12 +36,6 @@ public class BookServiceImpl implements BookService {
 		return bookRepository.findAvailable();
 	}
 
-	@Override
-	public List<Book> getBorrowedBooks() {
-		em.clear();
-		return bookRepository.findBorrowed();
-	}
-	
 	@Override
 	public void addBook(Book book) {
 		

@@ -61,6 +61,7 @@ import jakarta.persistence.EntityManager;
 import com.group5.constants.Constants;
 import com.group5.exception.BookNotFoundException;
 import com.group5.exception.InvalidBookException;
+import com.group5.exception.InvalidLoanIdException;
 import com.group5.exception.InvalidUserException;
 import com.group5.exception.UserCancelException;
 
@@ -153,15 +154,18 @@ public class LibraryApplication {
 	            	try {
 	            		Book book = validateBookId(input);
 	            		
+	            		if (book.isBorrowed()) {
+	            			throw new InvalidLoanIdException("Book is currently out.");
+	            		}
+	            		
 	            		validateLoanId(input, book);
 	            		
 	            		System.out.println(user.getName() + " successfully loaned " + book.getTitle());
 	            		
-	            	} catch (UserCancelException e) {
+	            	} catch (UserCancelException|InvalidLoanIdException e) {
 	            		logger.warn(e.getMessage());
 	            		System.out.println(e.getMessage());
-	            		
-	            	} 
+	            	}
 	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -438,7 +442,7 @@ private Book validateBookId(Scanner input) throws UserCancelException {
 				
 				Book findBookId = bookService.findById(Long.valueOf(bookId));
 				
-				if (findBookId == null ) {
+				if (findBookId == null) {
 					logger.error("Invalid Book ID number.");
 					throw new BookNotFoundException(Constants.strERROR_INVALID_BOOK_ID);
 				}
