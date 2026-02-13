@@ -185,6 +185,7 @@ public class LibraryApplication {
 	            		
 	            		Loan loan = validateBorrowedBook(input);
 	            		logger.info("user {} returned book id: {} with loan id: {} to the library.", user.getName(), loan.getBookId(), loan.getId());
+	            		System.out.printf("User %s has returned %s to the library.%n", user.getName(), loan.getBook().getTitle());
 	            		
 	            	} catch (Exception e) {
 	            		System.out.println(e.getMessage());

@@ -80,8 +80,8 @@ public class LoanRepositoryImpl implements Repository <Loan, Long> {
 				"select l from Loan l " +
 				"join fetch l.book b " +
 				"join fetch l.user u " +
-				"where b.isBorrowed = true " +
-				"order by l.id desc",
+				"where b.isBorrowed = true and " +
+				"l.id = (select max(l2.id) from Loan l2 where l2.book = b)",
 				Loan.class)
 				.getResultList();
 		return loan;
